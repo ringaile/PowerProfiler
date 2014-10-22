@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">PowerManager</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Android Power Manager</string>
     <string name="action_settings">Settings</string>
 
 </resources>
