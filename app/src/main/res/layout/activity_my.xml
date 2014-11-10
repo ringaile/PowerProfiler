@@ -17,7 +17,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First"
+        android:text="Start Measuring"
         android:id="@+id/buttonFirst"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
@@ -27,21 +27,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Second"
+        android:text="Save to log"
         android:id="@+id/buttonSecond"
         android:layout_below="@+id/buttonFirst"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="buttonSecondOnClick" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonThird"
-        android:layout_below="@+id/buttonSecond"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Third"
-        android:onClick="buttonThirdOnClick" />
 
 </RelativeLayout>

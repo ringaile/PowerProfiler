@@ -1,4 +1,4 @@
-package com.example.mse.powermanager.powermanager;
+package com.example.mse.powermanager.powermannager;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
