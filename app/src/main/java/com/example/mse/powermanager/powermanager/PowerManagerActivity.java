@@ -6,10 +6,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class PowerManagerActivity extends Activity {
 
@@ -19,10 +25,32 @@ public class PowerManagerActivity extends Activity {
         setContentView(R.layout.activity_my);
     }
 
+//    public void readSomeCPUShit() throws Exception
+//    {
+//        Log.e("HUI", "hui");
+//        File file = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
+//        RandomAccessFile rafile = new RandomAccessFile(file, "r");
+//
+//        Log.e("SHIT", "shit");
+//        String line;
+//        while ((line = rafile.readLine()) != null)
+//        {
+//            Log.e("CPU shit out", line);
+//        }
+//        rafile.close();
+//    }
 
     //button start / stop
 
     public void buttonFirstOnClick(View v){
+
+        // Read some CPU data
+//        try {
+//            readSomeCPUShit();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
         Button b = (Button) v;
             if (!PowerManagerActivity.this.isAlarmSet()) {
                 PowerManagerActivity.this.setRepeatingAlarm();
@@ -111,7 +139,7 @@ public class PowerManagerActivity extends Activity {
                 am.setRepeating(
                         AlarmManager.RTC_WAKEUP,
                         System.currentTimeMillis(),
-                        60 * 1000,
+                        3 * 1000,
                         pending
                 );
             }
