@@ -77,7 +77,7 @@ public class PowerManagerActivity extends Activity {
     //save measurements button
     public void buttonSecondOnClick(View v){
         Button b = (Button) v;
-        PowerManagerApp.writeToLog();
+        //PowerManagerApp.writeToLog();
         Toast.makeText(
                 getApplicationContext(),
                 "Written to log",

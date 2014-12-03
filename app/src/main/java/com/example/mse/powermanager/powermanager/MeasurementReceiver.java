@@ -25,7 +25,7 @@ import java.util.LinkedList;
 
 
 public class MeasurementReceiver extends BroadcastReceiver{
-    private MeasurementCollection measurements;
+    //private MeasurementCollection measurements;
     private PowerManager pm;
 
     @Override
@@ -33,7 +33,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
         String fileid = intent.getExtras().getString("fileid");
 
         pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        measurements = this.buildMeasurements();
+        //measurements = this.buildMeasurements();
 
         Log.d("RECEIVER", "file_id " + fileid);
         // spawn a new thread
@@ -47,10 +47,11 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 try {
                     lock.acquire();
 
+                    PowerManagerApp.addMeasurementIteration(perforMeasurementIteration());
                     // save the measurements
-                    if(measurements != null){
-                        PowerManagerApp.addMeasurementCollection(measurements);
-                    }
+//                    if(measurements != null){
+//                        PowerManagerApp.addMeasurementCollection(measurements);
+//                    }
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
@@ -109,11 +110,12 @@ public class MeasurementReceiver extends BroadcastReceiver{
         //TODO: check this, we need only one value, not many
         for (String interface_name : ReceiveMeasurement.getInterfaceNames())
         {
+            Log.d(">>> interface name:", interface_name);
             measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
             measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
         }
 
-        return null;
+        return measurement;
     }
 
 

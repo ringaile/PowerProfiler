@@ -1,7 +1,9 @@
 package com.example.mse.powermanager.powermanager.measurements;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.PowerManager;
+import android.provider.Settings;
 
 /**
  * Created by Ringaile on 10/11/2014.
@@ -9,9 +11,11 @@ import android.os.PowerManager;
 public class ScreenStatus implements Measurement{
 
     private PowerManager powermanager;
+    private ContentResolver contentResolver;
 
     public ScreenStatus(Context context) {
         powermanager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        contentResolver = context.getContentResolver();
     }
 
     public String getName() {
@@ -34,6 +38,11 @@ public class ScreenStatus implements Measurement{
 
     public double getScreenBrightnessValue()
     {
-        return curBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
+        try
+        {
+            return android.provider.Settings.System.getInt(contentResolver, android.provider.Settings.System.SCREEN_BRIGHTNESS);
+        }
+        catch (Settings.SettingNotFoundException e) { e.printStackTrace(); }
+        return 0;
     }
 }
