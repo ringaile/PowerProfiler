@@ -31,4 +31,9 @@ public class ScreenStatus implements Measurement{
     {
         return powermanager.isScreenOn();
     }
+
+    public double getScreenBrightnessValue()
+    {
+        return curBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
+    }
 }

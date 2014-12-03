@@ -33,4 +33,9 @@ public class CpuFrequencyMeasurement implements Measurement{
 
         return frequency;
     }
+
+    public double getCpuFrequency()
+    {
+        return getMeasurement().doubleValue();
+    }
 }

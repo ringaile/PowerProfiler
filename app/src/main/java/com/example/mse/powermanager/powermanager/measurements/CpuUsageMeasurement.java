@@ -70,4 +70,9 @@ public class CpuUsageMeasurement implements Measurement {
         rd.close();
         return null;
     }
+
+    public double getCpuUsageValue()
+    {
+        return getMeasurement().doubleValue();
+    }
 }

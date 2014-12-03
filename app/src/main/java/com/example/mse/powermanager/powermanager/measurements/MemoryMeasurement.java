@@ -34,4 +34,9 @@ public class MemoryMeasurement implements Measurement {
         mem.close();
         return result;
     }
+
+    public double getMemoryFreeValue()
+    {
+        return getMeasurement().doubleValue();
+    }
 }

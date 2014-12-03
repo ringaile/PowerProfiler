@@ -88,6 +88,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
         return measurements;
     }
 
+//{"timestamp":1417611255,"bluetooth_status":0,"cpu_usage":5,"battery_level":66,"wifi_status":1,"mobile_status":0,"cpu_frequency":2265600,"gps_status":1,"memory_free":56.886164498080596,"screen_status":1}
     private MeasurementStruct perforMeasurementIteration()
     {
         MeasurementStruct measurement = new MeasurementStruct();
@@ -100,11 +101,10 @@ public class MeasurementReceiver extends BroadcastReceiver{
         measurement.gpsStatus = (new GpsStatus(PowerManagerApp.getContext())).getGpsStatusValue();
         measurement.screenStatus = (new ScreenStatus(PowerManagerApp.getContext())).getScreenStatusValue();
 
-        //TODO: fill these with doubl values
-//        measurement.screenBrightness = ;
-//        measurement.cpuFrequency = ;
-//        measurement.cpuUsage = ;
-//        measurement.memoryFree = ;
+        measurement.screenBrightness = (new ScreenStatus(PowerManagerApp.getContext())).getScreenBrightnessValue();
+        measurement.cpuFrequency = (new CpuFrequencyMeasurement()).getCpuFrequency();
+        measurement.cpuUsage = (new CpuUsageMeasurement()).getCpuUsageValue();
+        measurement.memoryFree = (new MemoryMeasurement()).getMemoryFreeValue();
 
         //TODO: check this, we need only one value, not many
         for (String interface_name : ReceiveMeasurement.getInterfaceNames())
@@ -113,6 +113,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
             measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
         }
 
+        return null;
     }
 
 
