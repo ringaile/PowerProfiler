@@ -35,4 +35,10 @@ public class BluetoothStatus implements Measurement {
 
         return 0.0;
     }
+
+    public boolean getBluetoothStatusValue()
+    {
+        return (info != null && info.isAvailable());
+    }
+
 }

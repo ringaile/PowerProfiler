@@ -31,4 +31,9 @@ public class GpsStatus implements Measurement{
 
         return 0.0;
     }
+
+    public boolean getGpsStatusValue()
+    {
+        return location.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
 }

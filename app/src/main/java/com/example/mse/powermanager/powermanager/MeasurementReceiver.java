@@ -19,6 +19,9 @@ import com.example.mse.powermanager.powermanager.measurements.BluetoothStatus;
 import com.example.mse.powermanager.powermanager.measurements.CpuFrequencyMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.MobileStatus;
 import com.example.mse.powermanager.powermanager.measurements.ScreenStatus;
+import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
+
+import java.util.LinkedList;
 
 
 public class MeasurementReceiver extends BroadcastReceiver{
@@ -72,10 +75,10 @@ public class MeasurementReceiver extends BroadcastReceiver{
         measurements.addMeasurement(new CpuUsageMeasurement());
         measurements.addMeasurement(new MemoryMeasurement());
 
-        for (String interface_name : ReceiveMeasurement.getInterfaceNames()) {
-            measurements.addMeasurement(new ReceiveMeasurement(interface_name));
-            measurements.addMeasurement(new TransmitMeasurement(interface_name));
-        }
+//        for (String interface_name : ReceiveMeasurement.getInterfaceNames()) {
+//            measurements.addMeasurement(new ReceiveMeasurement(interface_name));
+//            measurements.addMeasurement(new TransmitMeasurement(interface_name));
+//        }
 
         measurements.addMeasurement(new MobileStatus(PowerManagerApp.getContext()));
         measurements.addMeasurement(new WifiStatus(PowerManagerApp.getContext()));
@@ -84,4 +87,33 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
         return measurements;
     }
+
+    private MeasurementStruct perforMeasurementIteration()
+    {
+        MeasurementStruct measurement = new MeasurementStruct();
+        measurement.timestamp = (new TimestampMeasurement()).getTimestampValue();
+        measurement.batteryLevel = (new BatteryMeasurement(PowerManagerApp.getContext())).getBatteryLevelValue();
+
+        measurement.mobileStatus = (new MobileStatus(PowerManagerApp.getContext())).getMobileStatusValue();
+        measurement.wifiStatus = (new WifiStatus(PowerManagerApp.getContext())).getWifiStatusValue();
+        measurement.bluetoothStatus = (new BluetoothStatus(PowerManagerApp.getContext())).getBluetoothStatusValue();
+        measurement.gpsStatus = (new GpsStatus(PowerManagerApp.getContext())).getGpsStatusValue();
+        measurement.screenStatus = (new ScreenStatus(PowerManagerApp.getContext())).getScreenStatusValue();
+
+        //TODO: fill these with doubl values
+//        measurement.screenBrightness = ;
+//        measurement.cpuFrequency = ;
+//        measurement.cpuUsage = ;
+//        measurement.memoryFree = ;
+
+        //TODO: check this, we need only one value, not many
+        for (String interface_name : ReceiveMeasurement.getInterfaceNames())
+        {
+            measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
+            measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
+        }
+
+    }
+
+
 }

@@ -26,4 +26,10 @@ public class WifiStatus implements Measurement {
 
         return 0.0;
     }
+
+    public boolean getWifiStatusValue()
+    {
+        return info.isAvailable();
+    }
+
 }

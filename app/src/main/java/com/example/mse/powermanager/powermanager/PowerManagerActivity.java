@@ -27,7 +27,6 @@ public class PowerManagerActivity extends Activity {
 
 //    public void readSomeCPUShit() throws Exception
 //    {
-//        Log.e("HUI", "hui");
 //        File file = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
 //        RandomAccessFile rafile = new RandomAccessFile(file, "r");
 //

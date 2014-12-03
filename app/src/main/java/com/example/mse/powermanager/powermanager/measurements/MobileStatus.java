@@ -28,4 +28,9 @@ public class MobileStatus implements Measurement {
 
         return 0.0;
     }
+
+    public boolean getMobileStatusValue()
+    {
+        return info.isAvailable();
+    }
 }

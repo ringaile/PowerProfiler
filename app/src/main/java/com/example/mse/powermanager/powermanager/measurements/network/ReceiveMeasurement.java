@@ -20,4 +20,14 @@ public class ReceiveMeasurement extends NetworkMeasurement {
             return null;
         }
     }
+
+    public double getReceivedNetworkValue()
+    {
+        String[] traffic = new String[0];
+        try { traffic = super.readProcFile(); }
+            catch (Exception e) { e.printStackTrace(); }
+        Double received = Double.parseDouble(traffic[0]);
+        return received.doubleValue();
+    }
+
 }

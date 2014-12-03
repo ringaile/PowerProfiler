@@ -26,4 +26,9 @@ public class ScreenStatus implements Measurement{
 
         return 0.0;
     }
+
+    public boolean getScreenStatusValue()
+    {
+        return powermanager.isScreenOn();
+    }
 }

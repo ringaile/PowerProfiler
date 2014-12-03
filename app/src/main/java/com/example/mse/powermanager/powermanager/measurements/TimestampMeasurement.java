@@ -12,4 +12,9 @@ public class TimestampMeasurement implements Measurement{
         Long timestamp = new Long(System.currentTimeMillis() / 1000);
         return timestamp.doubleValue();
     }
+
+    public long getTimestampValue()
+    {
+        return (System.currentTimeMillis() / 1000);
+    }
 }

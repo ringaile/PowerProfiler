@@ -31,4 +31,15 @@ public class BatteryMeasurement implements Measurement{
 
         return (level / (double)scale) * 100;
     }
+
+    public double getBatteryLevelValue()
+    {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent status = context.registerReceiver(null, filter);
+
+        int level = status.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = status.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        return (level / (double)scale) * 100;
+    }
 }
