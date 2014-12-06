@@ -5,9 +5,9 @@ import java.io.RandomAccessFile;
 
 public class MemoryMeasurement implements Measurement {
 
-    public String getName() {
-        return "memory_free";
-    }
+//    public String getName() {
+//        return "memory_free";
+//    }
 
     public Double getMeasurement() {
         try {

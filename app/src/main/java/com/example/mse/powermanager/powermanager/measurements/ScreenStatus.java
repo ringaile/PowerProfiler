@@ -18,18 +18,18 @@ public class ScreenStatus implements Measurement{
         contentResolver = context.getContentResolver();
     }
 
-    public String getName() {
-
-        return "screen_status";
-    }
-
-    public Double getMeasurement() {
-        if (powermanager.isScreenOn()) {
-            return 1.0;
-        }
-
-        return 0.0;
-    }
+//    public String getName() {
+//
+//        return "screen_status";
+//    }
+//
+//    public Double getMeasurement() {
+//        if (powermanager.isScreenOn()) {
+//            return 1.0;
+//        }
+//
+//        return 0.0;
+//    }
 
     public boolean getScreenStatusValue()
     {

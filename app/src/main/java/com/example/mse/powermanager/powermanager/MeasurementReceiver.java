@@ -64,30 +64,30 @@ public class MeasurementReceiver extends BroadcastReceiver{
         th.start();
     }
 
-    private MeasurementCollection buildMeasurements() {
-        Log.d("RECEIVER", "new instance");
-        MeasurementCollection measurements = new MeasurementCollection();
-
-        // add all measurements
-        measurements.addMeasurement(new TimestampMeasurement());
-        measurements.addMeasurement(new BatteryMeasurement(PowerManagerApp.getContext()));
-        measurements.addMeasurement(new ScreenStatus(PowerManagerApp.getContext()));
-        measurements.addMeasurement(new CpuFrequencyMeasurement());
-        measurements.addMeasurement(new CpuUsageMeasurement());
-        measurements.addMeasurement(new MemoryMeasurement());
-
-//        for (String interface_name : ReceiveMeasurement.getInterfaceNames()) {
-//            measurements.addMeasurement(new ReceiveMeasurement(interface_name));
-//            measurements.addMeasurement(new TransmitMeasurement(interface_name));
-//        }
-
-        measurements.addMeasurement(new MobileStatus(PowerManagerApp.getContext()));
-        measurements.addMeasurement(new WifiStatus(PowerManagerApp.getContext()));
-        measurements.addMeasurement(new BluetoothStatus(PowerManagerApp.getContext()));
-        measurements.addMeasurement(new GpsStatus(PowerManagerApp.getContext()));
-
-        return measurements;
-    }
+//    private MeasurementCollection buildMeasurements() {
+//        Log.d("RECEIVER", "new instance");
+//        MeasurementCollection measurements = new MeasurementCollection();
+//
+//        // add all measurements
+//        measurements.addMeasurement(new TimestampMeasurement());
+//        measurements.addMeasurement(new BatteryMeasurement(PowerManagerApp.getContext()));
+//        measurements.addMeasurement(new ScreenStatus(PowerManagerApp.getContext()));
+//        measurements.addMeasurement(new CpuFrequencyMeasurement());
+//        measurements.addMeasurement(new CpuUsageMeasurement());
+//        measurements.addMeasurement(new MemoryMeasurement());
+//
+////        for (String interface_name : ReceiveMeasurement.getInterfaceNames()) {
+////            measurements.addMeasurement(new ReceiveMeasurement(interface_name));
+////            measurements.addMeasurement(new TransmitMeasurement(interface_name));
+////        }
+//
+//        measurements.addMeasurement(new MobileStatus(PowerManagerApp.getContext()));
+//        measurements.addMeasurement(new WifiStatus(PowerManagerApp.getContext()));
+//        measurements.addMeasurement(new BluetoothStatus(PowerManagerApp.getContext()));
+//        measurements.addMeasurement(new GpsStatus(PowerManagerApp.getContext()));
+//
+//        return measurements;
+//    }
 
 //{"timestamp":1417611255,"bluetooth_status":0,"cpu_usage":5,"battery_level":66,"wifi_status":1,"mobile_status":0,"cpu_frequency":2265600,"gps_status":1,"memory_free":56.886164498080596,"screen_status":1}
     private MeasurementStruct perforMeasurementIteration()

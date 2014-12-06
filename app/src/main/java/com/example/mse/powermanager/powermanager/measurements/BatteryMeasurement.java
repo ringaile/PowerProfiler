@@ -17,20 +17,20 @@ public class BatteryMeasurement implements Measurement{
         this.context = context;
     }
 
-    public String getName() {
-
-        return "battery_level";
-    }
-
-    public Double getMeasurement() {
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent status = context.registerReceiver(null, filter);
-
-        int level = status.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = status.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        return (level / (double)scale) * 100;
-    }
+//    public String getName() {
+//
+//        return "battery_level";
+//    }
+//
+//    public Double getMeasurement() {
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//        Intent status = context.registerReceiver(null, filter);
+//
+//        int level = status.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+//        int scale = status.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+//
+//        return (level / (double)scale) * 100;
+//    }
 
     public double getBatteryLevelValue()
     {

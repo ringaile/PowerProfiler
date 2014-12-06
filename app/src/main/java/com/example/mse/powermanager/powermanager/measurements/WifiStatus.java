@@ -15,17 +15,17 @@ public class WifiStatus implements Measurement {
         info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     }
 
-    public String getName() {
-        return "wifi_status";
-    }
-
-    public Double getMeasurement() {
-        if (info.isAvailable()) {
-            return 1.0;
-        }
-
-        return 0.0;
-    }
+//    public String getName() {
+//        return "wifi_status";
+//    }
+//
+//    public Double getMeasurement() {
+//        if (info.isAvailable()) {
+//            return 1.0;
+//        }
+//
+//        return 0.0;
+//    }
 
     public boolean getWifiStatusValue()
     {

@@ -12,10 +12,10 @@ import java.io.IOException;
  */
 public class CpuUsageMeasurement implements Measurement {
 
-    public String getName() {
-
-        return "cpu_usage";
-    }
+//    public String getName() {
+//
+//        return "cpu_usage";
+//    }
 
     public Double getMeasurement() {
         try {
