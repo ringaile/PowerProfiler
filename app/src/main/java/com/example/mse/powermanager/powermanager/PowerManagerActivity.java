@@ -41,7 +41,7 @@ public class PowerManagerActivity extends Activity {
 
     //button start / stop
 
-    public void buttonFirstOnClick(View v){
+    public void buttonStartOnClick(View v){
 
         // Read some CPU data
 //        try {
@@ -75,16 +75,25 @@ public class PowerManagerActivity extends Activity {
         }
 
     //save measurements button
-    public void buttonSecondOnClick(View v){
-        Button b = (Button) v;
-        //PowerManagerApp.writeToLog();
-        Toast.makeText(
-                getApplicationContext(),
-                "Written to log",
-                Toast.LENGTH_SHORT
-        ).show();
+    public void buttonSavingOnClick(View v){
+//        Button b = (Button) v;
+//        //PowerManagerApp.writeToLog();
+//        Toast.makeText(
+//                getApplicationContext(),
+//                "Written to log",
+//                Toast.LENGTH_SHORT
+//        ).show();
     }
 
+    public void buttonNormalOnClick(View v)
+    {
+
+    }
+
+    public void buttonPerformanceOnClick(View v)
+    {
+
+    }
 
     private boolean isAlarmSet(){
         Intent intent = new Intent(PowerManagerApp.getContext(), MeasurementReceiver.class);
