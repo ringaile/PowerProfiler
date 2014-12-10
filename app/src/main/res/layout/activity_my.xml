@@ -12,27 +12,47 @@
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Measuring"
+        android:text="Start"
         android:id="@+id/buttonFirst"
+        android:onClick="buttonStartOnClick"
+        android:layout_marginTop="31dp"
         android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="buttonFirstOnClick" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save to log"
+        android:text="Saving"
         android:id="@+id/buttonSecond"
-        android:layout_below="@+id/buttonFirst"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="buttonSecondOnClick" />
+        android:onClick="buttonSavingOnClick"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Normal"
+        android:id="@+id/button"
+        android:onClick="buttonNormalOnClick"
+        android:layout_below="@+id/buttonSecond"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Performance"
+        android:id="@+id/button2"
+        android:onClick="buttonPerformanceOnClick"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
