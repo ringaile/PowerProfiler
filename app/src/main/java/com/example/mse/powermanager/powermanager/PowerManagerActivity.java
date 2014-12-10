@@ -6,16 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 
 public class PowerManagerActivity extends Activity {
 
@@ -83,6 +78,12 @@ public class PowerManagerActivity extends Activity {
                 "Written to log",
                 Toast.LENGTH_SHORT
         ).show();
+    }
+
+    public void buttonThirdOnClick(View v){
+        Button b = (Button) v;
+        Intent intent = new Intent(this, ProcessListActivity.class);
+        startActivity(intent);
     }
 
 

@@ -9,22 +9,42 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".PowerManagerApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name="com.example.mse.powermanager.powermanager.PowerManagerApp">
-        <receiver android:name="com.example.mse.powermanager.powermanager.MeasurementReceiver" >
+        android:theme="@style/AppTheme" >
+        <receiver android:name=".MeasurementReceiver" >
         </receiver>
 
         <activity
-            android:name="com.example.mse.powermanager.powermanager.PowerManagerActivity"
+            android:name=".PowerManagerActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ProcessListActivity"
+            android:label="@string/title_activity_process_list" >
+        </activity>
+
+        <service
+            android:name=".SingleProcessService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 </manifest>
