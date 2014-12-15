@@ -111,8 +111,13 @@ public class MeasurementReceiver extends BroadcastReceiver{
         for (String interface_name : ReceiveMeasurement.getInterfaceNames())
         {
             Log.d(">>> interface name:", interface_name);
-            measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
-            measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
+            if (interface_name.equals("wlan0"))
+            {
+                Log.d("wlan0","yep");
+                measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
+                measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
+                break;
+            }
         }
 
         return measurement;

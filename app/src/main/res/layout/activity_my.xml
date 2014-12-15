@@ -12,37 +12,57 @@
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Measuring"
-        android:id="@+id/buttonFirst"
+        android:text="Start"
+        android:id="@+id/buttonStart"
+        android:onClick="buttonStartOnClick"
+        android:layout_marginTop="31dp"
         android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="buttonFirstOnClick" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save to log"
-        android:id="@+id/buttonSecond"
-        android:layout_below="@+id/buttonFirst"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="buttonSecondOnClick" />
+        android:text="Saving"
+        android:id="@+id/buttonSaving"
+        android:onClick="buttonSavingOnClick"
+        android:layout_below="@+id/buttonStart"
+        android:layout_alignLeft="@+id/buttonNormal"
+        android:layout_alignStart="@+id/buttonNormal"
+        android:layout_marginTop="51dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Normal"
+        android:id="@+id/buttonNormal"
+        android:onClick="buttonNormalOnClick"
+        android:layout_below="@+id/buttonSaving"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Performance"
+        android:id="@+id/buttonPerformance"
+        android:onClick="buttonPerformanceOnClick"
+        android:layout_below="@+id/buttonNormal"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show list"
         android:id="@+id/buttonList"
-        android:layout_below="@+id/buttonSecond"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="buttonThirdOnClick" />
+        android:onClick="buttonListOnClick"
+        android:layout_marginBottom="53dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

@@ -16,6 +16,7 @@ public class PowerManagerApp extends Application{
     private static String fileid;
     //private static List<MeasurementCollection> measureContainer;
     public static List<MeasurementStruct> measurementIterations;
+    public static int mode;
 
     public void onCreate() {
         super.onCreate();

@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,6 @@ public class PowerManagerActivity extends Activity {
 //        File file = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
 //        RandomAccessFile rafile = new RandomAccessFile(file, "r");
 //
-//        Log.e("SHIT", "shit");
 //        String line;
 //        while ((line = rafile.readLine()) != null)
 //        {
@@ -34,17 +34,8 @@ public class PowerManagerActivity extends Activity {
 //        rafile.close();
 //    }
 
-    //button start / stop
-
-    public void buttonFirstOnClick(View v){
-
-        // Read some CPU data
-//        try {
-//            readSomeCPUShit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
+    public void buttonStartOnClick(View v)
+    {
         Button b = (Button) v;
             if (!PowerManagerActivity.this.isAlarmSet()) {
                 PowerManagerActivity.this.setRepeatingAlarm();
@@ -67,25 +58,33 @@ public class PowerManagerActivity extends Activity {
                         Toast.LENGTH_SHORT
                 ).show();
             }
-        }
-
-    //save measurements button
-    public void buttonSecondOnClick(View v){
-        Button b = (Button) v;
-        //PowerManagerApp.writeToLog();
-        Toast.makeText(
-                getApplicationContext(),
-                "Written to log",
-                Toast.LENGTH_SHORT
-        ).show();
     }
 
-    public void buttonThirdOnClick(View v){
+    public void buttonSavingOnClick(View v)
+    {
+        Log.d("Set to mode:", "SAVING");
+        PowerManagerApp.mode = 0;
+    }
+
+    public void buttonNormalOnClick(View v)
+    {
+        Log.d("Set to mode:", "NORMAL");
+        PowerManagerApp.mode = 1;
+    }
+
+    public void buttonPerformanceOnClick(View v)
+    {
+        Log.d("Set to mode:", "PERFORMANCE");
+        PowerManagerApp.mode = 2;
+    }
+
+
+    public void buttonListOnClick(View v)
+    {
         Button b = (Button) v;
         Intent intent = new Intent(this, ProcessListActivity.class);
         startActivity(intent);
     }
-
 
     private boolean isAlarmSet(){
         Intent intent = new Intent(PowerManagerApp.getContext(), MeasurementReceiver.class);
