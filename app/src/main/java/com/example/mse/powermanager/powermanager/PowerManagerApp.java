@@ -44,6 +44,8 @@ public class PowerManagerApp extends Application{
     {
         Log.d("addMeasurementIteration", String.valueOf(measurementIterations.size()));
         measurementIterations.add(measurementStruct);
+        float meanProcessorLoad = 0;
+        float meanMemoryFree = 0;
         if (measurementIterations.size() >= 10)
         {
             for (MeasurementStruct iteratedStruct: measurementIterations)
@@ -65,9 +67,33 @@ public class PowerManagerApp extends Application{
                 Log.d("sent network", String.valueOf(iteratedStruct.networkSent));
                 Log.d("received network", String.valueOf(iteratedStruct.networkReceived));
 
+                meanProcessorLoad += iteratedStruct.cpuUsage;
+                meanMemoryFree += iteratedStruct.memoryFree;
             }
+            meanProcessorLoad /= 10;
+            meanMemoryFree /= 10;
             //TODO: process gathered data
             //Make some changes to the system
+            Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
+            Log.d("Mean memory free", String.valueOf(meanMemoryFree));
+
+            if (mode == 0)
+            {
+                if ( (meanProcessorLoad > 50) || (meanMemoryFree < 50) )
+                {
+                    //ACTION
+                    Log.d("ACTION", "saving action");
+                }
+            }
+            else if (mode == 1)
+            {
+                if ( (meanProcessorLoad > 75) || (meanMemoryFree < 75) )
+                {
+                    //ACTION
+                    Log.d("ACTION", "normal action");
+                }
+            }
+
             measurementIterations.clear();
         }
     }
