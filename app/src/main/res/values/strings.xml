@@ -12,6 +12,6 @@
     <string name="process_free_mem">App/Available Memory:</string>
     <string name="process_overall_cpu">App/System CPU:</string>
     <string name="traffic">Net Traffic(KB)</string>
-    <string name="current">Current(mA)</string>
     <string name="stat_error">Stat Error</string>
+    <string name="current">Current</string>
 </resources>
