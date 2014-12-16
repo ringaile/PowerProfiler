@@ -3,7 +3,9 @@ package com.example.mse.powermanager.powermanager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.example.mse.powermanager.powermanager.measurements.BatteryMeasurement;
@@ -20,16 +22,23 @@ import com.example.mse.powermanager.powermanager.measurements.CpuFrequencyMeasur
 import com.example.mse.powermanager.powermanager.measurements.MobileStatus;
 import com.example.mse.powermanager.powermanager.measurements.ScreenStatus;
 import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
+import android.bluetooth.BluetoothAdapter;
+import android.view.WindowManager;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class MeasurementReceiver extends BroadcastReceiver{
-    //private MeasurementCollection measurements;
     private PowerManager pm;
+    private List<MeasurementStruct> measurementIterations;
+    private Context context;
+    PowerManagerActivity mainActivity;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent)
+    {
+        this.context = context;
         String fileid = intent.getExtras().getString("fileid");
 
         pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
@@ -47,11 +56,9 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 try {
                     lock.acquire();
 
-                    PowerManagerApp.addMeasurementIteration(perforMeasurementIteration());
-                    // save the measurements
-//                    if(measurements != null){
-//                        PowerManagerApp.addMeasurementCollection(measurements);
-//                    }
+                    iteration();
+                    //PowerManagerApp.addMeasurementIteration(perforMeasurementIteration());
+
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
@@ -64,30 +71,90 @@ public class MeasurementReceiver extends BroadcastReceiver{
         th.start();
     }
 
-//    private MeasurementCollection buildMeasurements() {
-//        Log.d("RECEIVER", "new instance");
-//        MeasurementCollection measurements = new MeasurementCollection();
-//
-//        // add all measurements
-//        measurements.addMeasurement(new TimestampMeasurement());
-//        measurements.addMeasurement(new BatteryMeasurement(PowerManagerApp.getContext()));
-//        measurements.addMeasurement(new ScreenStatus(PowerManagerApp.getContext()));
-//        measurements.addMeasurement(new CpuFrequencyMeasurement());
-//        measurements.addMeasurement(new CpuUsageMeasurement());
-//        measurements.addMeasurement(new MemoryMeasurement());
-//
-////        for (String interface_name : ReceiveMeasurement.getInterfaceNames()) {
-////            measurements.addMeasurement(new ReceiveMeasurement(interface_name));
-////            measurements.addMeasurement(new TransmitMeasurement(interface_name));
-////        }
-//
-//        measurements.addMeasurement(new MobileStatus(PowerManagerApp.getContext()));
-//        measurements.addMeasurement(new WifiStatus(PowerManagerApp.getContext()));
-//        measurements.addMeasurement(new BluetoothStatus(PowerManagerApp.getContext()));
-//        measurements.addMeasurement(new GpsStatus(PowerManagerApp.getContext()));
-//
-//        return measurements;
-//    }
+    private void iteration()
+    {
+        Log.d("iteration", String.valueOf(measurementIterations.size()));
+        measurementIterations.add(perforMeasurementIteration());
+        float meanProcessorLoad = 0;
+        float meanMemoryFree = 0;
+        if (measurementIterations.size() >= 10)
+        {
+            for (MeasurementStruct iteratedStruct: measurementIterations)
+            {
+                Log.d(">>>>> timestamp", String.valueOf(iteratedStruct.timestamp));
+                Log.d("battery level", String.valueOf(iteratedStruct.batteryLevel));
+
+                Log.d("wifi", String.valueOf(iteratedStruct.wifiStatus));
+                Log.d("bluetooth", String.valueOf(iteratedStruct.bluetoothStatus));
+                Log.d("mobile", String.valueOf(iteratedStruct.mobileStatus));
+                Log.d("gps", String.valueOf(iteratedStruct.gpsStatus));
+                Log.d("screen on", String.valueOf(iteratedStruct.screenStatus));
+
+                Log.d("screen brightness", String.valueOf(iteratedStruct.screenBrightness));
+                Log.d("memory free", String.valueOf(iteratedStruct.memoryFree));
+                Log.d("cpu usage", String.valueOf(iteratedStruct.cpuUsage));
+                Log.d("cpu frequency", String.valueOf(iteratedStruct.cpuFrequency));
+
+                Log.d("sent network", String.valueOf(iteratedStruct.networkSent));
+                Log.d("received network", String.valueOf(iteratedStruct.networkReceived));
+
+                meanProcessorLoad += iteratedStruct.cpuUsage;
+                meanMemoryFree += iteratedStruct.memoryFree;
+            }
+            meanProcessorLoad /= 10;
+            meanMemoryFree /= 10;
+            //TODO: process gathered data
+            //Make some changes to the system
+            Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
+            Log.d("Mean memory free", String.valueOf(meanMemoryFree));
+
+            //WiFi methods >>
+            WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+            boolean wifiEnabled = wifiManager.isWifiEnabled();
+            wifiManager.setWifiEnabled(true);
+            wifiManager.setWifiEnabled(false);
+
+            //Bluetooth methods >>
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            mBluetoothAdapter.isEnabled();
+            mBluetoothAdapter.enable();
+            mBluetoothAdapter.disable();
+
+            //Brightness methods >>
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            //Get the current system brightness
+            try {
+                int brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+            } catch (Settings.SettingNotFoundException e) { e.printStackTrace(); }
+
+            //Set brightness
+            //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
+            WindowManager.LayoutParams lp = mainActivity.getWindow().getAttributes();
+            lp.screenBrightness =0.2f;// 100 / 100.0f;
+            mainActivity.getWindow().setAttributes(lp);
+            //context.startActivity(new Intent(mainActivity,PowerManagerActivity.class));
+
+            if (PowerManagerApp.mode == 0)
+            {
+                if ( (meanProcessorLoad > 50) || (meanMemoryFree < 50) )
+                {
+                    //ACTION
+                    Log.d("ACTION", "saving action");
+                }
+            }
+            else if (PowerManagerApp.mode == 1)
+            {
+                if ( (meanProcessorLoad > 75) || (meanMemoryFree < 75) )
+                {
+                    //ACTION
+                    Log.d("ACTION", "normal action");
+                }
+            }
+
+            measurementIterations.clear();
+        }
+    }
+
 
 //{"timestamp":1417611255,"bluetooth_status":0,"cpu_usage":5,"battery_level":66,"wifi_status":1,"mobile_status":0,"cpu_frequency":2265600,"gps_status":1,"memory_free":56.886164498080596,"screen_status":1}
     private MeasurementStruct perforMeasurementIteration()
