@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -77,6 +79,23 @@ public class PowerManagerActivity extends Activity {
     {
         Log.d("Set to mode:", "PERFORMANCE");
         PowerManagerApp.mode = 2;
+    }
+
+    public void setScreenBrightness(float brightness)
+    {
+        Settings.System.putInt(PowerManagerApp.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        final WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = brightness;// 100 / 100.0f;
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                getWindow().setAttributes(lp);
+            }
+        });
+        ///getWindow().setAttributes(lp);
+        //PowerManagerApp.getContext().startActivity(new Intent(this,PowerManagerActivity.class));
     }
 
 

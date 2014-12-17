@@ -78,14 +78,16 @@ public class MeasurementReceiver extends BroadcastReceiver{
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
 
-        boolean wifiEnabled = wifiManager.isWifiEnabled();
+        //boolean wifiEnabled = wifiManager.isWifiEnabled();
         //Log.d("wifi enabled >", String.valueOf(wifiEnabled));
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.disable();
 
-        boolean bluetoothEnabled = mBluetoothAdapter.isEnabled();
+        //boolean bluetoothEnabled = mBluetoothAdapter.isEnabled();
         //Log.d("bluetooth enabled >", String.valueOf(bluetoothEnabled));
+
+        PowerManagerApp.mainActivity.setScreenBrightness(0.1f);
 
 
 //        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
@@ -189,7 +191,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
             }
             else if (PowerManagerApp.mode == 1)
             {
-                if ( (meanProcessorLoad > 75) || (meanMemoryFree < 75) )
+                if ( (meanProcessorLoad > 75) || (meanMemoryFree < 25) )
                 {
                     //ACTION
                     Log.d(">>> ACTION", "normal action");
