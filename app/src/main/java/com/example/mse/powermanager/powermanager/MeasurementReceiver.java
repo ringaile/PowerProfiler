@@ -1,5 +1,6 @@
 package com.example.mse.powermanager.powermanager;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +46,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
         pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
         //measurements = this.buildMeasurements();
 
-        Log.d("RECEIVER", "file_id " + fileid);
+        //Log.d("RECEIVER", "file_id " + fileid);
         // spawn a new thread
         Thread th = new Thread() {
             public void run() {
@@ -77,13 +78,20 @@ public class MeasurementReceiver extends BroadcastReceiver{
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
 
+        boolean wifiEnabled = wifiManager.isWifiEnabled();
+        //Log.d("wifi enabled >", String.valueOf(wifiEnabled));
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.disable();
 
-        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-        WindowManager.LayoutParams lp = PowerManagerApp.mainActivity.getWindow().getAttributes();
-        lp.screenBrightness =0.2f;// 100 / 100.0f;
-        PowerManagerApp.mainActivity.getWindow().setAttributes(lp);
+        boolean bluetoothEnabled = mBluetoothAdapter.isEnabled();
+        //Log.d("bluetooth enabled >", String.valueOf(bluetoothEnabled));
+
+
+//        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//        WindowManager.LayoutParams lp = PowerManagerApp.mainActivity.getWindow().getAttributes();
+//        lp.screenBrightness =0.2f;// 100 / 100.0f;
+//        PowerManagerApp.mainActivity.getWindow().setAttributes(lp);
     }
 
     private void turnOn()
@@ -171,7 +179,12 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 if ( (meanProcessorLoad > 50) || (meanMemoryFree < 50) )
                 {
                     //ACTION
-                    Log.d("ACTION", "saving action");
+                    Log.d(">>> ACTION", "saving action");
+                    turnOff();
+                }
+                else
+                {
+                    turnOn();
                 }
             }
             else if (PowerManagerApp.mode == 1)
@@ -179,7 +192,12 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 if ( (meanProcessorLoad > 75) || (meanMemoryFree < 75) )
                 {
                     //ACTION
-                    Log.d("ACTION", "normal action");
+                    Log.d(">>> ACTION", "normal action");
+                    turnOff();
+                }
+                else
+                {
+                    turnOn();
                 }
             }
             else
@@ -188,6 +206,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
             }
 
             PowerManagerApp.measurementIterations.clear();
+            //Log.d("CLEAR", "clear");
         }
     }
 
@@ -208,15 +227,15 @@ public class MeasurementReceiver extends BroadcastReceiver{
         measurement.screenBrightness = (new ScreenStatus(PowerManagerApp.getContext())).getScreenBrightnessValue();
         measurement.cpuFrequency = (new CpuFrequencyMeasurement()).getCpuFrequency();
         measurement.cpuUsage = (new CpuUsageMeasurement()).getCpuUsageValue();
-        measurement.memoryFree = (new MemoryMeasurement()).getMemoryFreeValue();
+        measurement.memoryFree = (new MemoryMeasurement(context)).getMemoryFreeValue();
 
         //TODO: check this, we need only one value, not many
         for (String interface_name : ReceiveMeasurement.getInterfaceNames())
         {
-            Log.d(">>> interface name:", interface_name);
+            //Log.d(">>> interface name:", interface_name);
             if (interface_name.equals("wlan0"))
             {
-                Log.d("wlan0","yep");
+                //Log.d("wlan0","yep");
                 measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
                 measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
                 break;

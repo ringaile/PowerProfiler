@@ -23,8 +23,8 @@ public class CpuUsageMeasurement implements Measurement {
             Thread.sleep(100);
             Double[] sample2 = this.getSample();
 
-            Log.d("CPU", "sample1: " + sample1[0] + " - " + sample1[1]);
-            Log.d("CPU", "sample2: " + sample2[0] + " - " + sample2[1]);
+            //Log.d("CPU", "sample1: " + sample1[0] + " - " + sample1[1]);
+            //Log.d("CPU", "sample2: " + sample2[0] + " - " + sample2[1]);
 
             return (sample2[0] - sample1[0]) / (sample2[1] - sample1[1]) * 100;
         } catch (InterruptedException ie) {

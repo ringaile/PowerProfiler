@@ -4,15 +4,19 @@ package com.example.mse.powermanager.powermanager.measurements;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 public class WifiStatus implements Measurement {
 
     private ConnectivityManager connectivity;
     private NetworkInfo info;
+    private Context context;
 
     public WifiStatus(Context context) {
-        connectivity = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//        connectivity = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        this.context = context;
     }
 
 //    public String getName() {
@@ -29,7 +33,12 @@ public class WifiStatus implements Measurement {
 
     public boolean getWifiStatusValue()
     {
-        return info.isAvailable();
+        //This doesnt work properly
+        //return info.isAvailable();
+
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        boolean wifiEnabled = wifiManager.isWifiEnabled();
+        return wifiEnabled;
     }
 
 }
