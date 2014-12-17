@@ -25,15 +25,16 @@ import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
 import android.bluetooth.BluetoothAdapter;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class MeasurementReceiver extends BroadcastReceiver{
     private PowerManager pm;
-    private List<MeasurementStruct> measurementIterations;
+    ///private List<MeasurementStruct> measurementIterations;
     private Context context;
-    PowerManagerActivity mainActivity;
+    //PowerManagerActivity mainActivity;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -71,15 +72,46 @@ public class MeasurementReceiver extends BroadcastReceiver{
         th.start();
     }
 
+    private void turnOff()
+    {
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter.disable();
+
+        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        WindowManager.LayoutParams lp = PowerManagerApp.mainActivity.getWindow().getAttributes();
+        lp.screenBrightness =0.2f;// 100 / 100.0f;
+        PowerManagerApp.mainActivity.getWindow().setAttributes(lp);
+    }
+
+    private void turnOn()
+    {
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter.enable();
+    }
+
+
     private void iteration()
     {
-        Log.d("iteration", String.valueOf(measurementIterations.size()));
-        measurementIterations.add(perforMeasurementIteration());
+//        if (measurementIterations == null)
+//        {
+//            measurementIterations = new ArrayList<>();
+//        }
+
+        Log.d("iteration", String.valueOf(PowerManagerApp.measurementIterations.size()));
+        MeasurementStruct measurement = perforMeasurementIteration();
+        PowerManagerApp.measurementIterations.add(measurement);
         float meanProcessorLoad = 0;
         float meanMemoryFree = 0;
-        if (measurementIterations.size() >= 10)
+        int numberOfIterations = 3;
+        if (PowerManagerApp.measurementIterations.size() >= numberOfIterations)
         {
-            for (MeasurementStruct iteratedStruct: measurementIterations)
+            for (MeasurementStruct iteratedStruct: PowerManagerApp.measurementIterations)
             {
                 Log.d(">>>>> timestamp", String.valueOf(iteratedStruct.timestamp));
                 Log.d("battery level", String.valueOf(iteratedStruct.batteryLevel));
@@ -101,38 +133,38 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 meanProcessorLoad += iteratedStruct.cpuUsage;
                 meanMemoryFree += iteratedStruct.memoryFree;
             }
-            meanProcessorLoad /= 10;
-            meanMemoryFree /= 10;
+            meanProcessorLoad /= numberOfIterations;
+            meanMemoryFree /= numberOfIterations;
             //TODO: process gathered data
             //Make some changes to the system
             Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
             Log.d("Mean memory free", String.valueOf(meanMemoryFree));
 
-            //WiFi methods >>
-            WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-            boolean wifiEnabled = wifiManager.isWifiEnabled();
-            wifiManager.setWifiEnabled(true);
-            wifiManager.setWifiEnabled(false);
-
-            //Bluetooth methods >>
-            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            mBluetoothAdapter.isEnabled();
-            mBluetoothAdapter.enable();
-            mBluetoothAdapter.disable();
-
-            //Brightness methods >>
-            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-            //Get the current system brightness
-            try {
-                int brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
-            } catch (Settings.SettingNotFoundException e) { e.printStackTrace(); }
-
-            //Set brightness
-            //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
-            WindowManager.LayoutParams lp = mainActivity.getWindow().getAttributes();
-            lp.screenBrightness =0.2f;// 100 / 100.0f;
-            mainActivity.getWindow().setAttributes(lp);
-            //context.startActivity(new Intent(mainActivity,PowerManagerActivity.class));
+//            //WiFi methods >>
+//            WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+//            boolean wifiEnabled = wifiManager.isWifiEnabled();
+//            wifiManager.setWifiEnabled(true);
+//            wifiManager.setWifiEnabled(false);
+//
+//            //Bluetooth methods >>
+//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//            mBluetoothAdapter.isEnabled();
+//            mBluetoothAdapter.enable();
+//            mBluetoothAdapter.disable();
+//
+//            //Brightness methods >>
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//            //Get the current system brightness
+//            try {
+//                int brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+//            } catch (Settings.SettingNotFoundException e) { e.printStackTrace(); }
+//
+//            //Set brightness
+//            //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
+//            WindowManager.LayoutParams lp = mainActivity.getWindow().getAttributes();
+//            lp.screenBrightness =0.2f;// 100 / 100.0f;
+//            mainActivity.getWindow().setAttributes(lp);
+//            //context.startActivity(new Intent(mainActivity,PowerManagerActivity.class));
 
             if (PowerManagerApp.mode == 0)
             {
@@ -150,8 +182,12 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     Log.d("ACTION", "normal action");
                 }
             }
+            else
+            {
 
-            measurementIterations.clear();
+            }
+
+            PowerManagerApp.measurementIterations.clear();
         }
     }
 

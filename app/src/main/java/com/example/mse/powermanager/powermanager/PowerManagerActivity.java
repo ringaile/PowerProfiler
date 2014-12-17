@@ -19,6 +19,7 @@ public class PowerManagerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        PowerManagerApp.mainActivity = this;
     }
 
 //    public void readSomeCPUShit() throws Exception
@@ -138,7 +139,7 @@ public class PowerManagerActivity extends Activity {
                 am.setRepeating(
                         AlarmManager.RTC_WAKEUP,
                         System.currentTimeMillis(),
-                        3 * 1000,
+                        1 * 1000,
                         pending
                 );
             }

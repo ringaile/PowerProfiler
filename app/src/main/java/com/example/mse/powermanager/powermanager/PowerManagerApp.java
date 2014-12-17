@@ -15,13 +15,14 @@ import java.util.List;
 public class PowerManagerApp extends Application{
     private static Context context;
     private static String fileid;
-    //public static List<MeasurementStruct> measurementIterations;
+    public static List<MeasurementStruct> measurementIterations;
+    public static PowerManagerActivity mainActivity;
     public static int mode;
 
     public void onCreate() {
         super.onCreate();
         PowerManagerApp.context = getApplicationContext();
-        //measurementIterations = new ArrayList<MeasurementStruct>();
+        measurementIterations = new ArrayList<MeasurementStruct>();
     }
 
     public static Context getContext() {
