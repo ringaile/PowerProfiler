@@ -2,8 +2,10 @@ package com.example.mse.powermanager.powermanager;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -96,6 +98,17 @@ public class PowerManagerActivity extends Activity {
         });
         ///getWindow().setAttributes(lp);
         //PowerManagerApp.getContext().startActivity(new Intent(this,PowerManagerActivity.class));
+    }
+
+    public void showWarning(double proc, double mem)
+    {
+        new AlertDialog.Builder(PowerManagerApp.mainActivity)
+                .setTitle("Warning.")
+                .setMessage("Processor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .show();
     }
 
 

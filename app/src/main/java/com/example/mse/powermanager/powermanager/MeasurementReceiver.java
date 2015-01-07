@@ -1,10 +1,14 @@
 package com.example.mse.powermanager.powermanager;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -25,6 +29,7 @@ import com.example.mse.powermanager.powermanager.measurements.ScreenStatus;
 import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
 import android.bluetooth.BluetoothAdapter;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -145,6 +150,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
             }
             meanProcessorLoad /= numberOfIterations;
             meanMemoryFree /= numberOfIterations;
+            meanMemoryFree *= 100;
             //TODO: process gathered data
             //Make some changes to the system
             Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
@@ -182,6 +188,18 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 {
                     //ACTION
                     Log.d(">>> ACTION", "saving action");
+                    final double proc = meanProcessorLoad;
+                    final double mem = meanMemoryFree;
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable()
+                    {
+                        public void run()
+                        {
+                            PowerManagerApp.mainActivity.showWarning(proc,mem);
+                            //Toast.makeText(context, "Processor load: "+String.valueOf(proc)+" Memory free: "+String.valueOf(mem), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     turnOff();
                 }
                 else
@@ -195,6 +213,16 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 {
                     //ACTION
                     Log.d(">>> ACTION", "normal action");
+                    final double proc = meanProcessorLoad;
+                    final double mem = meanMemoryFree;
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable()
+                    {
+                        public void run()
+                        {
+                            PowerManagerApp.mainActivity.showWarning(proc,mem);
+                        }
+                    });
                     turnOff();
                 }
                 else
