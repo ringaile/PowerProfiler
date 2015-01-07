@@ -3,6 +3,8 @@ package com.example.mse.powermanager.powermanager;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -67,6 +69,7 @@ public class PowerManagerActivity extends Activity {
 
     public void buttonSavingOnClick(View v)
     {
+        //showNotification(1,1);
         Log.d("Set to mode:", "SAVING");
         PowerManagerApp.mode = 0;
     }
@@ -106,11 +109,32 @@ public class PowerManagerActivity extends Activity {
                 .setTitle("Warning.")
                 .setMessage("Processor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {}
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
                 })
                 .show();
     }
 
+    public void showNotification(double proc, double mem)
+    {
+//        Intent intent = new Intent(this, NotificationReceiver.class);
+//        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        // Build notification
+        // Actions are just fake
+        Notification noti = new Notification.Builder(PowerManagerApp.mainActivity)
+                .setContentTitle("Warning!")
+                .setContentText("Processor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%").setSmallIcon(R.drawable.icon).build();
+//                .setContentIntent(pIntent).build();
+//                .addAction(R.drawable.icon, "Call", pIntent)
+//                .addAction(R.drawable.icon, "More", pIntent)
+//                .addAction(R.drawable.icon, "And more", pIntent).build();
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, noti);
+    }
 
     public void buttonListOnClick(View v)
     {

@@ -2,6 +2,9 @@ package com.example.mse.powermanager.powermanager;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -110,6 +113,10 @@ public class MeasurementReceiver extends BroadcastReceiver{
         mBluetoothAdapter.enable();
     }
 
+    private void showNotification(double proc, double mem)
+    {
+
+    }
 
     private void iteration()
     {
@@ -184,19 +191,21 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
             if (PowerManagerApp.mode == 0)
             {
-                if ( (meanProcessorLoad > 50) || (meanMemoryFree < 50) )
+                if ( (meanProcessorLoad > 50) || (meanMemoryFree < 75) )
                 {
                     //ACTION
                     Log.d(">>> ACTION", "saving action");
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
+                    //showNotification(proc,mem);
                     Handler h = new Handler(Looper.getMainLooper());
                     h.post(new Runnable()
                     {
                         public void run()
                         {
-                            PowerManagerApp.mainActivity.showWarning(proc,mem);
-                            //Toast.makeText(context, "Processor load: "+String.valueOf(proc)+" Memory free: "+String.valueOf(mem), Toast.LENGTH_SHORT).show();
+                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+                            //PowerManagerApp.mainActivity.showWarning(proc,mem);
+                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -216,11 +225,11 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
                     Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable()
-                    {
-                        public void run()
-                        {
-                            PowerManagerApp.mainActivity.showWarning(proc,mem);
+                    h.post(new Runnable() {
+                        public void run() {
+                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+                            //PowerManagerApp.mainActivity.showWarning(proc, mem);
+                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
                         }
                     });
                     turnOff();
