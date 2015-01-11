@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -29,11 +30,17 @@ import com.example.mse.powermanager.powermanager.measurements.BluetoothStatus;
 import com.example.mse.powermanager.powermanager.measurements.CpuFrequencyMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.MobileStatus;
 import com.example.mse.powermanager.powermanager.measurements.ScreenStatus;
+import com.example.mse.powermanager.powermanager.singleProcessUtil.CpuInfo;
+import com.example.mse.powermanager.powermanager.singleProcessUtil.CurrentInfo;
+import com.example.mse.powermanager.powermanager.singleProcessUtil.MemoryInfo;
+import com.example.mse.powermanager.powermanager.singleProcessUtil.ProcessInfo;
+import com.example.mse.powermanager.powermanager.singleProcessUtil.Programe;
 import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
 import android.bluetooth.BluetoothAdapter;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,6 +133,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
 //        }
 
         Log.d("iteration", String.valueOf(PowerManagerApp.measurementIterations.size()));
+        getProcessesList();
         MeasurementStruct measurement = perforMeasurementIteration();
         PowerManagerApp.measurementIterations.add(measurement);
         float meanProcessorLoad = 0;
@@ -283,6 +291,57 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
         return measurement;
     }
+
+    private void getProcessesList()
+    {
+        ProcessInfo processInfo = new ProcessInfo();
+        List<Programe> processList = processInfo.getRunningProcess(PowerManagerApp.mainActivity.getBaseContext());
+        for (Programe programe : processList)
+        {
+            //if (programe.getPackageName() != null)
+            {
+                int pid = programe.getPid();
+                int uid = programe.getUid();
+                Log.d(">>>PROCESS","name: "+programe.getProcessName()+"   pid: "+String.valueOf(pid)+"   uid: "+String.valueOf(uid));
+
+
+                MemoryInfo memoryInfo = new MemoryInfo();
+                int pidMemory = memoryInfo.getPidMemorySize(pid, PowerManagerApp.mainActivity.getBaseContext());
+                long freeMemory = memoryInfo.getFreeMemorySize(PowerManagerApp.mainActivity.getBaseContext());
+                DecimalFormat formatter = new DecimalFormat();
+                formatter.setMaximumFractionDigits(2);
+                formatter.setMinimumFractionDigits(0);
+                String freeMemoryKb = formatter.format((double) freeMemory / 1024);
+                String processMemory = formatter.format((double) pidMemory / 1024);
+                Log.d(">>>PROCESS","process memory KB: "+processMemory+"   free memory KB: "+freeMemoryKb);
+
+
+                CpuInfo cpuInfo = new CpuInfo(PowerManagerApp.mainActivity.getBaseContext(), pid, Integer.toString(uid));
+                cpuInfo.readCpuStat();
+
+                String processCpuRatio = "0.00";
+                String totalCpuRatio = "0.00";
+                String trafficSize = "0";
+
+//                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+//                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+//                totalBatt = String.valueOf(level * 100 / scale);
+//                voltage = String.valueOf(intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) * 1.0 / 1000);
+//                temperature = String.valueOf(intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) * 1.0 / 10);
+//                CurrentInfo currentInfo = new CurrentInfo();
+//                String currentBatt = String.valueOf(currentInfo.getCurrentValue());
+
+                ArrayList<String> cpuRatioInfo = cpuInfo.getCpuRatioInfo("", "", "", "");
+                Log.d(">>>","size: "+cpuRatioInfo.size());
+                processCpuRatio = cpuRatioInfo.get(0);
+                totalCpuRatio = cpuRatioInfo.get(1);
+                trafficSize = cpuRatioInfo.get(2);
+
+                Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
+            }
+        }
+    }
+
 
 
 }
