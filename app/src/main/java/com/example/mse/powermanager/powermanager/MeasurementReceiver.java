@@ -52,6 +52,27 @@ public class MeasurementReceiver extends BroadcastReceiver{
     private Context context;
     //PowerManagerActivity mainActivity;
 
+    //Process stuff
+    private int delaytime;
+    private DecimalFormat fomart;
+    private MemoryInfo memoryInfo;
+    private Handler handler = new Handler();
+    private CpuInfo cpuInfo;
+    private boolean isFloating;
+    private String processName, packageName, startActivity;
+    private int pid, uid;
+    private boolean isServiceStop = false;
+
+    public static String resultFilePath;
+    public static boolean isStop = false;
+
+    private String totalBatt;
+    private String temperature;
+    private String voltage;
+    private CurrentInfo currentInfo;
+    private SingleProcessService.BatteryInfoBroadcastReceiver batteryBroadcast = null;
+
+
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -313,7 +334,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 formatter.setMinimumFractionDigits(0);
                 String freeMemoryKb = formatter.format((double) freeMemory / 1024);
                 String processMemory = formatter.format((double) pidMemory / 1024);
-                Log.d(">>>PROCESS","process memory KB: "+processMemory+"   free memory KB: "+freeMemoryKb);
+                Log.d(">>>PROCESS","process memory: "+pidMemory+"   free memory: "+freeMemory);
 
 
                 CpuInfo cpuInfo = new CpuInfo(PowerManagerApp.mainActivity.getBaseContext(), pid, Integer.toString(uid));
@@ -332,12 +353,17 @@ public class MeasurementReceiver extends BroadcastReceiver{
 //                String currentBatt = String.valueOf(currentInfo.getCurrentValue());
 
                 ArrayList<String> cpuRatioInfo = cpuInfo.getCpuRatioInfo("", "", "", "");
-                Log.d(">>>","size: "+cpuRatioInfo.size());
-                processCpuRatio = cpuRatioInfo.get(0);
-                totalCpuRatio = cpuRatioInfo.get(1);
-                trafficSize = cpuRatioInfo.get(2);
+                if (!cpuRatioInfo.isEmpty())
+                {
+                    //Log.d(">>>","size: "+cpuRatioInfo.size());
+                    processCpuRatio = cpuRatioInfo.get(0);
+                    totalCpuRatio = cpuRatioInfo.get(1);
+                    trafficSize = cpuRatioInfo.get(2);
+                    Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
+                }
 
-                Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
+
+
             }
         }
     }
