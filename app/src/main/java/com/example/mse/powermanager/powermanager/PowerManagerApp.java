@@ -16,6 +16,7 @@ public class PowerManagerApp extends Application{
     private static Context context;
     private static String fileid;
     public static List<MeasurementStruct> measurementIterations;
+    public static List<String> warningsList;
     public static PowerManagerActivity mainActivity;
     public static int mode;
 
@@ -23,6 +24,7 @@ public class PowerManagerApp extends Application{
         super.onCreate();
         PowerManagerApp.context = getApplicationContext();
         measurementIterations = new ArrayList<MeasurementStruct>();
+        warningsList = new ArrayList<String>();
     }
 
     public static Context getContext() {

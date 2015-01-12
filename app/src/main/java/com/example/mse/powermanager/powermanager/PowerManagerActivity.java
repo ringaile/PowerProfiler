@@ -115,7 +115,7 @@ public class PowerManagerActivity extends Activity {
                 .show();
     }
 
-    public void showNotification(double proc, double mem)
+    public void showNotificationNums(double proc, double mem)
     {
 //        Intent intent = new Intent(this, NotificationReceiver.class);
 //        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -129,6 +129,18 @@ public class PowerManagerActivity extends Activity {
 //                .addAction(R.drawable.icon, "Call", pIntent)
 //                .addAction(R.drawable.icon, "More", pIntent)
 //                .addAction(R.drawable.icon, "And more", pIntent).build();
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, noti);
+    }
+
+    public void showNotification(String text)
+    {
+        Notification noti = new Notification.Builder(PowerManagerApp.mainActivity)
+                .setContentTitle("Warning!")
+                .setContentText(text).setSmallIcon(R.drawable.icon).build();
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         // hide the notification after its selected
         noti.flags |= Notification.FLAG_AUTO_CANCEL;

@@ -53,24 +53,24 @@ public class MeasurementReceiver extends BroadcastReceiver{
     //PowerManagerActivity mainActivity;
 
     //Process stuff
-    private int delaytime;
-    private DecimalFormat fomart;
-    private MemoryInfo memoryInfo;
-    private Handler handler = new Handler();
-    private CpuInfo cpuInfo;
-    private boolean isFloating;
-    private String processName, packageName, startActivity;
-    private int pid, uid;
-    private boolean isServiceStop = false;
-
-    public static String resultFilePath;
-    public static boolean isStop = false;
-
-    private String totalBatt;
-    private String temperature;
-    private String voltage;
-    private CurrentInfo currentInfo;
-    private SingleProcessService.BatteryInfoBroadcastReceiver batteryBroadcast = null;
+//    private int delaytime;
+//    private DecimalFormat fomart;
+//    private MemoryInfo memoryInfo;
+//    private Handler handler = new Handler();
+//    private CpuInfo cpuInfo;
+//    private boolean isFloating;
+//    private String processName, packageName, startActivity;
+//    private int pid, uid;
+//    private boolean isServiceStop = false;
+//
+//    public static String resultFilePath;
+//    public static boolean isStop = false;
+//
+//    private String totalBatt;
+//    private String temperature;
+//    private String voltage;
+//    private CurrentInfo currentInfo;
+//    private SingleProcessService.BatteryInfoBroadcastReceiver batteryBroadcast = null;
 
 
     @Override
@@ -154,7 +154,6 @@ public class MeasurementReceiver extends BroadcastReceiver{
 //        }
 
         Log.d("iteration", String.valueOf(PowerManagerApp.measurementIterations.size()));
-        getProcessesList();
         MeasurementStruct measurement = perforMeasurementIteration();
         PowerManagerApp.measurementIterations.add(measurement);
         float meanProcessorLoad = 0;
@@ -227,16 +226,17 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
                     //showNotification(proc,mem);
-                    Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable()
-                    {
-                        public void run()
-                        {
-                            PowerManagerApp.mainActivity.showNotification(proc,mem);
-                            //PowerManagerApp.mainActivity.showWarning(proc,mem);
-                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    PowerManagerApp.warningsList.add("Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%");
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable()
+//                    {
+//                        public void run()
+//                        {
+//                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            //PowerManagerApp.mainActivity.showWarning(proc,mem);
+//                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
 
                     turnOff();
                 }
@@ -253,14 +253,15 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     Log.d(">>> ACTION", "normal action");
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
-                    Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable() {
-                        public void run() {
-                            PowerManagerApp.mainActivity.showNotification(proc,mem);
-                            //PowerManagerApp.mainActivity.showWarning(proc, mem);
-                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    PowerManagerApp.warningsList.add("Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%");
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable() {
+//                        public void run() {
+//                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            //PowerManagerApp.mainActivity.showWarning(proc, mem);
+//                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                     turnOff();
                 }
                 else
@@ -273,9 +274,33 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
             }
 
+            getProcessesList();
+            showWarnings();
+
             PowerManagerApp.measurementIterations.clear();
+            PowerManagerApp.warningsList.clear();
             //Log.d("CLEAR", "clear");
         }
+    }
+
+    private void showWarnings()
+    {
+        String resultStr = "";
+        for (String warning: PowerManagerApp.warningsList)
+        {
+            resultStr += warning;
+            resultStr += "\n";
+        }
+        final String result = resultStr;
+        Handler h = new Handler(Looper.getMainLooper());
+        h.post(new Runnable()
+        {
+            public void run()
+            {
+                PowerManagerApp.mainActivity.showNotification(result);
+                Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -327,22 +352,40 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
 
                 MemoryInfo memoryInfo = new MemoryInfo();
-                int pidMemory = memoryInfo.getPidMemorySize(pid, PowerManagerApp.mainActivity.getBaseContext());
+                long pidMemory = memoryInfo.getPidMemorySize(pid, PowerManagerApp.mainActivity.getBaseContext());
                 long freeMemory = memoryInfo.getFreeMemorySize(PowerManagerApp.mainActivity.getBaseContext());
+                long totalMemory = memoryInfo.getTotalMemory();
                 DecimalFormat formatter = new DecimalFormat();
                 formatter.setMaximumFractionDigits(2);
                 formatter.setMinimumFractionDigits(0);
-                String freeMemoryKb = formatter.format((double) freeMemory / 1024);
-                String processMemory = formatter.format((double) pidMemory / 1024);
-                Log.d(">>>PROCESS","process memory: "+pidMemory+"   free memory: "+freeMemory);
+                String totalMemoryMb = formatter.format((double) totalMemory / 1024);
+                String freeMemoryMb = formatter.format((double) freeMemory / 1024);
+                String processMemoryMb = formatter.format((double) pidMemory / 1024);
+                Log.d(">>>PROCESS","MB -> process memory: "+processMemoryMb+"   free memory: "+freeMemoryMb+"   total memory: "+totalMemoryMb);
+                double proportion = (double)pidMemory/(double)totalMemory;
+                Log.d(">>>PROCESS","MB mem porportion: "+formatter.format(proportion));
+                if (proportion > 0.01)
+                {
+                    PowerManagerApp.warningsList.add("Warning! Process <"+programe.getProcessName()+"> uses "+formatter.format(proportion*100)+"% ("+processMemoryMb+"Mb) of total memory.");
+//                    final String procName = programe.getProcessName();
+//                    final String prop = formatter.format(proportion*100);
+//                    final String procMem = processMemoryMb;
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable() {
+//                        public void run() {
+//                            //PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            Toast.makeText(context, "Warning! Process <"+procName+"> uses "+prop+"% ("+procMem+"Mb) of total memory.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                    //Toast.makeText(context, "Warning! Process <"+programe.getProcessName()+"> uses "+formatter.format(proportion*100)+"% ("+processMemoryMb+"Mb) of total memory.", Toast.LENGTH_SHORT).show();
+                }
 
-
-                CpuInfo cpuInfo = new CpuInfo(PowerManagerApp.mainActivity.getBaseContext(), pid, Integer.toString(uid));
-                cpuInfo.readCpuStat();
-
-                String processCpuRatio = "0.00";
-                String totalCpuRatio = "0.00";
-                String trafficSize = "0";
+//                CpuInfo cpuInfo = new CpuInfo(PowerManagerApp.mainActivity.getBaseContext(), pid, Integer.toString(uid));
+//                cpuInfo.readCpuStat();
+//
+//                String processCpuRatio = "0.00";
+//                String totalCpuRatio = "0.00";
+//                String trafficSize = "0";
 
 //                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 //                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
@@ -352,15 +395,15 @@ public class MeasurementReceiver extends BroadcastReceiver{
 //                CurrentInfo currentInfo = new CurrentInfo();
 //                String currentBatt = String.valueOf(currentInfo.getCurrentValue());
 
-                ArrayList<String> cpuRatioInfo = cpuInfo.getCpuRatioInfo("", "", "", "");
-                if (!cpuRatioInfo.isEmpty())
-                {
-                    //Log.d(">>>","size: "+cpuRatioInfo.size());
-                    processCpuRatio = cpuRatioInfo.get(0);
-                    totalCpuRatio = cpuRatioInfo.get(1);
-                    trafficSize = cpuRatioInfo.get(2);
-                    Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
-                }
+//                ArrayList<String> cpuRatioInfo = cpuInfo.getCpuRatioInfo("", "", "", "");
+//                if (!cpuRatioInfo.isEmpty())
+//                {
+//                    //Log.d(">>>","size: "+cpuRatioInfo.size());
+//                    processCpuRatio = cpuRatioInfo.get(0);
+//                    totalCpuRatio = cpuRatioInfo.get(1);
+//                    trafficSize = cpuRatioInfo.get(2);
+//                    Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
+//                }
 
 
 
