@@ -170,21 +170,23 @@ public class SingleProcessService extends Service {
                     txtTotalMem = getString(R.string.process_overall_cpu) + processCpuRatio + "%/" + totalCpuRatio + "%";
                     Log.w("LogWriter", getString(R.string.process_overall_cpu) + processCpuRatio + "%/" + totalCpuRatio + "%");
                     String batt = getString(R.string.current) + currentBatt;
+                    StringBuilder message = new StringBuilder();
+                    message.append(txtUnusedMem).append("\n");
+                    message.append(txtTotalMem).append("\n");
                     if ("-1".equals(trafficSize)) {
                         txtTraffic = batt + "," + getString(R.string.traffic) + "N/A";
+                        message.append(txtTraffic).append("\n");
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + "N/A");
                     } else if (isMb) {
                         txtTraffic = batt + "," + getString(R.string.traffic) + fomart.format(trafficMb) + "MB";
+                        message.append(txtTraffic).append("\n");
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + fomart.format(trafficMb) + "MB");
                     }
                     else {
                         txtTraffic = batt + "," + getString(R.string.traffic) + trafficSize + "KB";
+                        message.append(txtTraffic).append("\n");
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + trafficSize + "KB");
                     }
-                    StringBuilder message = new StringBuilder();
-                    message.append(txtUnusedMem).append("\n");
-                    message.append(txtTotalMem).append("\n");
-                    message.append(txtTraffic).append("\n");
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
 
