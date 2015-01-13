@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mse.powermanager.powermanager.singleProcessUtil.CpuInfo;
 import com.example.mse.powermanager.powermanager.singleProcessUtil.CurrentInfo;
@@ -31,7 +33,9 @@ public class SingleProcessService extends Service {
     private String processName, packageName, startActivity;
     private int pid, uid;
     private boolean isServiceStop = false;
-
+    private String txtTotalMem;
+    private String txtUnusedMem;
+    private String txtTraffic;
     public static String resultFilePath;
     public static boolean isStop = false;
 
@@ -161,18 +165,27 @@ public class SingleProcessService extends Service {
                 }
 
                 if (processCpuRatio != null && totalCpuRatio != null) {
-                    //txtUnusedMem.setText(getString(R.string.process_free_mem) + processMemory + "/" + freeMemoryKb + "MB");
+                    txtUnusedMem =getString(R.string.process_free_mem) + processMemory + "/" + freeMemoryKb + "MB";
                     Log.w("LogWriter", getString(R.string.process_free_mem) + processMemory + "/" + freeMemoryKb + "MB");
+                    txtTotalMem = getString(R.string.process_overall_cpu) + processCpuRatio + "%/" + totalCpuRatio + "%";
                     Log.w("LogWriter", getString(R.string.process_overall_cpu) + processCpuRatio + "%/" + totalCpuRatio + "%");
                     String batt = getString(R.string.current) + currentBatt;
                     if ("-1".equals(trafficSize)) {
+                        txtTraffic = batt + "," + getString(R.string.traffic) + "N/A";
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + "N/A");
                     } else if (isMb) {
+                        txtTraffic = batt + "," + getString(R.string.traffic) + fomart.format(trafficMb) + "MB";
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + fomart.format(trafficMb) + "MB");
                     }
                     else {
+                        txtTraffic = batt + "," + getString(R.string.traffic) + trafficSize + "KB";
                         Log.w("LogWriter", batt + "," + getString(R.string.traffic) + trafficSize + "KB");
                     }
+                    StringBuilder message = new StringBuilder();
+                    message.append(txtUnusedMem).append("\n");
+                    message.append(txtTotalMem).append("\n");
+                    message.append(txtTraffic).append("\n");
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
 
                 if ("0".equals(processMemory)) {
@@ -183,6 +196,8 @@ public class SingleProcessService extends Service {
 
         }
     }
+
+
 
     @Override
     public void onDestroy() {
