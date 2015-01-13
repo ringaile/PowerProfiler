@@ -3,10 +3,6 @@ package com.example.mse.powermanager.powermanager;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.util.Log;
-
-import com.example.mse.powermanager.powermanager.measurements.MeasurementCollection;
 import com.example.mse.powermanager.powermanager.structs.MeasurementStruct;
 
 import java.util.ArrayList;
