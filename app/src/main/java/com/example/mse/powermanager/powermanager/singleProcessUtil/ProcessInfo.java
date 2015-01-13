@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProcessInfo {
 
-	private static final String PACKAGE_NAME = "com.netease.qa.emmagee";
+	private static final String PACKAGE_NAME = "com.example.mse.powermanager.powermanager";
 
 	/**
 	 * get information of all running processes,including package name ,process

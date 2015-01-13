@@ -166,8 +166,6 @@ public class MeasurementReceiver extends BroadcastReceiver{
             meanProcessorLoad /= numberOfIterations;
             meanMemoryFree /= numberOfIterations;
             meanMemoryFree *= 100;
-            //TODO: process gathered data
-            //Make some changes to the system
             Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
             Log.d("Mean memory free", String.valueOf(meanMemoryFree));
 
