@@ -1,6 +1,5 @@
 package com.example.mse.powermanager.powermanager.measurements;
 
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,19 +11,12 @@ import java.io.IOException;
  */
 public class CpuUsageMeasurement implements Measurement {
 
-//    public String getName() {
-//
-//        return "cpu_usage";
-//    }
 
     public Double getMeasurement() {
         try {
             Double[] sample1 = this.getSample();
             Thread.sleep(100);
             Double[] sample2 = this.getSample();
-
-            //Log.d("CPU", "sample1: " + sample1[0] + " - " + sample1[1]);
-            //Log.d("CPU", "sample2: " + sample2[0] + " - " + sample2[1]);
 
             return (sample2[0] - sample1[0]) / (sample2[1] - sample1[1]) * 100;
         } catch (InterruptedException ie) {

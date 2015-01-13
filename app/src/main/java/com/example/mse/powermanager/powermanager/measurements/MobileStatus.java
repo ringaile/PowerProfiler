@@ -17,18 +17,6 @@ public class MobileStatus implements Measurement {
         info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
     }
 
-//    public String getName() {
-//        return "mobile_status";
-//    }
-//
-//    public Double getMeasurement() {
-//        if (info.isAvailable()) {
-//            return 1.0;
-//        }
-//
-//        return 0.0;
-//    }
-
     public boolean getMobileStatusValue()
     {
         return info.isAvailable();

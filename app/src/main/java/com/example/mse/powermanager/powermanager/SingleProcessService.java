@@ -30,13 +30,12 @@ public class SingleProcessService extends Service {
     private Handler handler = new Handler();
     private CpuInfo cpuInfo;
     private boolean isFloating;
-    private String processName, packageName, startActivity;
+   // private String processName, packageName, startActivity;
     private int pid, uid;
     private boolean isServiceStop = false;
     private String txtTotalMem;
     private String txtUnusedMem;
     private String txtTraffic;
-    public static String resultFilePath;
     public static boolean isStop = false;
 
     private String totalBatt;
@@ -86,9 +85,9 @@ public class SingleProcessService extends Service {
 
         pid = intent.getExtras().getInt("pid");
         uid = intent.getExtras().getInt("uid");
-        processName = intent.getExtras().getString("processName");
-        packageName = intent.getExtras().getString("packageName");
-        startActivity = intent.getExtras().getString("startActivity");
+       // processName = intent.getExtras().getString("processName");
+       // packageName = intent.getExtras().getString("packageName");
+      //  startActivity = intent.getExtras().getString("startActivity");
 
         cpuInfo = new CpuInfo(getBaseContext(), pid, Integer.toString(uid));
         readSettingInfo();
@@ -96,11 +95,6 @@ public class SingleProcessService extends Service {
         return START_NOT_STICKY;
     }
 
-    /**
-     * read configuration file.
-     *
-     * @throws java.io.IOException
-     */
     private void readSettingInfo() {
         int interval = 1;
         delaytime = interval * 1000;
@@ -123,13 +117,7 @@ public class SingleProcessService extends Service {
         }
     };
 
-    /**
-     * refresh the performance data showing in floating window.
-     *
-     * @throws java.io.FileNotFoundException
-     *
-     * @throws java.io.IOException
-     */
+
     private void dataRefresh() {
         int pidMemory = memoryInfo.getPidMemorySize(pid, getBaseContext());
         long freeMemory = memoryInfo.getFreeMemorySize(getBaseContext());

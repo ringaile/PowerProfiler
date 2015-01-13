@@ -28,19 +28,6 @@ public class PowerManagerActivity extends Activity {
         PowerManagerApp.mainActivity = this;
     }
 
-//    public void readSomeCPUShit() throws Exception
-//    {
-//        File file = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
-//        RandomAccessFile rafile = new RandomAccessFile(file, "r");
-//
-//        String line;
-//        while ((line = rafile.readLine()) != null)
-//        {
-//            Log.e("CPU shit out", line);
-//        }
-//        rafile.close();
-//    }
-
     public void buttonStartOnClick(View v)
     {
         Button b = (Button) v;
@@ -99,42 +86,8 @@ public class PowerManagerActivity extends Activity {
                 getWindow().setAttributes(lp);
             }
         });
-        ///getWindow().setAttributes(lp);
-        //PowerManagerApp.getContext().startActivity(new Intent(this,PowerManagerActivity.class));
     }
 
-    public void showWarning(double proc, double mem)
-    {
-        new AlertDialog.Builder(PowerManagerApp.mainActivity)
-                .setTitle("Warning.")
-                .setMessage("Processor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .show();
-    }
-
-    public void showNotificationNums(double proc, double mem)
-    {
-//        Intent intent = new Intent(this, NotificationReceiver.class);
-//        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        // Build notification
-        // Actions are just fake
-        Notification noti = new Notification.Builder(PowerManagerApp.mainActivity)
-                .setContentTitle("Warning!")
-                .setContentText("Processor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%").setSmallIcon(R.drawable.icon).build();
-//                .setContentIntent(pIntent).build();
-//                .addAction(R.drawable.icon, "Call", pIntent)
-//                .addAction(R.drawable.icon, "More", pIntent)
-//                .addAction(R.drawable.icon, "And more", pIntent).build();
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        // hide the notification after its selected
-        noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notificationManager.notify(0, noti);
-    }
 
     public void showNotification(String text)
     {
@@ -150,7 +103,6 @@ public class PowerManagerActivity extends Activity {
 
     public void buttonListOnClick(View v)
     {
-        Button b = (Button) v;
         Intent intent = new Intent(this, ProcessListActivity.class);
         startActivity(intent);
     }

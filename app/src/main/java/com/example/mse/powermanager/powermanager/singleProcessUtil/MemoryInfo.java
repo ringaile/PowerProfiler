@@ -78,22 +78,4 @@ public class MemoryInfo {
 		int memSize = memoryInfo[0].getTotalPss();
 		return memSize;
 	}
-
-	/**
-	 * get the sdk version of phone.
-	 * 
-	 * @return sdk version
-	 */
-	public String getSDKVersion() {
-		return android.os.Build.VERSION.RELEASE;
-	}
-
-	/**
-	 * get phone type.
-	 * 
-	 * @return phone type
-	 */
-	public String getPhoneType() {
-		return android.os.Build.MODEL;
-	}
 }

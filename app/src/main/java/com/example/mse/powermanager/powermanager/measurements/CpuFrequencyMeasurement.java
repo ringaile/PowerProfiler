@@ -8,10 +8,6 @@ import java.io.RandomAccessFile;
  */
 public class CpuFrequencyMeasurement implements Measurement{
 
-//    public String getName() {
-//
-//        return "cpu_frequency";
-//    }
 
     public Double getMeasurement() {
         try {

@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -38,7 +37,6 @@ public class CpuInfo {
 	private ArrayList<Long> idleCpu = new ArrayList<Long>();
 	private ArrayList<Long> totalCpu = new ArrayList<Long>();
 	private boolean isInitialStatics = true;
-	private SimpleDateFormat formatterFile;
 	private MemoryInfo mi;
 	private long totalMemorySize;
 	private long initialTraffic;
@@ -119,8 +117,7 @@ public class CpuInfo {
 
 	/**
 	 * display directories naming with "cpu*"
-	 * 
-	 * @author andrewleo
+	 *
 	 */
 	class CpuFilter implements FileFilter {
 		@Override
