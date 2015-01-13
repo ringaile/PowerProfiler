@@ -1,17 +1,26 @@
 package com.example.mse.powermanager.powermanager;
 
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.example.mse.powermanager.powermanager.measurements.BatteryMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.CpuUsageMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.GpsStatus;
+import com.example.mse.powermanager.powermanager.measurements.MeasurementCollection;
 import com.example.mse.powermanager.powermanager.measurements.MemoryMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.TimestampMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.WifiStatus;
@@ -32,21 +41,49 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class MeasurementReceiver extends BroadcastReceiver{
     private PowerManager pm;
+    ///private List<MeasurementStruct> measurementIterations;
     private Context context;
+    //PowerManagerActivity mainActivity;
+
+    //Process stuff
+//    private int delaytime;
+//    private DecimalFormat fomart;
+//    private MemoryInfo memoryInfo;
+//    private Handler handler = new Handler();
+//    private CpuInfo cpuInfo;
+//    private boolean isFloating;
+//    private String processName, packageName, startActivity;
+//    private int pid, uid;
+//    private boolean isServiceStop = false;
+//
+//    public static String resultFilePath;
+//    public static boolean isStop = false;
+//
+//    private String totalBatt;
+//    private String temperature;
+//    private String voltage;
+//    private CurrentInfo currentInfo;
+//    private SingleProcessService.BatteryInfoBroadcastReceiver batteryBroadcast = null;
 
 
     @Override
     public void onReceive(Context context, Intent intent)
     {
         this.context = context;
+        String fileid = intent.getExtras().getString("fileid");
 
         pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        //measurements = this.buildMeasurements();
 
+        //Log.d("RECEIVER", "file_id " + fileid);
+        // spawn a new thread
         Thread th = new Thread() {
             public void run() {
                 // acquire partial wake lock to prevent the system from sleeping
@@ -56,7 +93,10 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 );
                 try {
                     lock.acquire();
+
                     iteration();
+                    //PowerManagerApp.addMeasurementIteration(perforMeasurementIteration());
+
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
@@ -101,9 +141,17 @@ public class MeasurementReceiver extends BroadcastReceiver{
         mBluetoothAdapter.enable();
     }
 
+    private void showNotification(double proc, double mem)
+    {
+
+    }
 
     private void iteration()
     {
+//        if (measurementIterations == null)
+//        {
+//            measurementIterations = new ArrayList<>();
+//        }
 
         Log.d("iteration", String.valueOf(PowerManagerApp.measurementIterations.size()));
         MeasurementStruct measurement = perforMeasurementIteration();
@@ -141,6 +189,31 @@ public class MeasurementReceiver extends BroadcastReceiver{
             Log.d("Mean processor load", String.valueOf(meanProcessorLoad));
             Log.d("Mean memory free", String.valueOf(meanMemoryFree));
 
+//            //WiFi methods >>
+//            WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+//            boolean wifiEnabled = wifiManager.isWifiEnabled();
+//            wifiManager.setWifiEnabled(true);
+//            wifiManager.setWifiEnabled(false);
+//
+//            //Bluetooth methods >>
+//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//            mBluetoothAdapter.isEnabled();
+//            mBluetoothAdapter.enable();
+//            mBluetoothAdapter.disable();
+//
+//            //Brightness methods >>
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//            //Get the current system brightness
+//            try {
+//                int brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+//            } catch (Settings.SettingNotFoundException e) { e.printStackTrace(); }
+//
+//            //Set brightness
+//            //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
+//            WindowManager.LayoutParams lp = mainActivity.getWindow().getAttributes();
+//            lp.screenBrightness =0.2f;// 100 / 100.0f;
+//            mainActivity.getWindow().setAttributes(lp);
+//            //context.startActivity(new Intent(mainActivity,PowerManagerActivity.class));
 
             if (PowerManagerApp.mode == 0)
             {
@@ -150,7 +223,18 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     Log.d(">>> ACTION", "saving action");
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
+                    //showNotification(proc,mem);
                     PowerManagerApp.warningsList.add("Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%");
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable()
+//                    {
+//                        public void run()
+//                        {
+//                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            //PowerManagerApp.mainActivity.showWarning(proc,mem);
+//                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
 
                     turnOff();
                 }
@@ -168,6 +252,14 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
                     PowerManagerApp.warningsList.add("Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%");
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable() {
+//                        public void run() {
+//                            PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            //PowerManagerApp.mainActivity.showWarning(proc, mem);
+//                            Toast.makeText(context, "Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                     turnOff();
                 }
                 else
@@ -185,6 +277,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
             PowerManagerApp.measurementIterations.clear();
             PowerManagerApp.warningsList.clear();
+            //Log.d("CLEAR", "clear");
         }
     }
 
@@ -233,6 +326,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
             //Log.d(">>> interface name:", interface_name);
             if (interface_name.equals("wlan0"))
             {
+                //Log.d("wlan0","yep");
                 measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
                 measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
                 break;
@@ -248,7 +342,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
         List<Programe> processList = processInfo.getRunningProcess(PowerManagerApp.mainActivity.getBaseContext());
         for (Programe programe : processList)
         {
-
+            //if (programe.getPackageName() != null)
             {
                 int pid = programe.getPid();
                 int uid = programe.getUid();
@@ -268,10 +362,48 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 Log.d(">>>PROCESS","MB -> process memory: "+processMemoryMb+"   free memory: "+freeMemoryMb+"   total memory: "+totalMemoryMb);
                 double proportion = (double)pidMemory/(double)totalMemory;
                 Log.d(">>>PROCESS","MB mem porportion: "+formatter.format(proportion));
-                if (proportion > 0.01) {
-                    PowerManagerApp.warningsList.add("Warning! Process <" + programe.getProcessName() + "> uses " + formatter.format(proportion * 100) + "% (" + processMemoryMb + "Mb) of total memory.");
-
+                if (proportion > 0.01)
+                {
+                    PowerManagerApp.warningsList.add("Warning! Process <"+programe.getProcessName()+"> uses "+formatter.format(proportion*100)+"% ("+processMemoryMb+"Mb) of total memory.");
+//                    final String procName = programe.getProcessName();
+//                    final String prop = formatter.format(proportion*100);
+//                    final String procMem = processMemoryMb;
+//                    Handler h = new Handler(Looper.getMainLooper());
+//                    h.post(new Runnable() {
+//                        public void run() {
+//                            //PowerManagerApp.mainActivity.showNotification(proc,mem);
+//                            Toast.makeText(context, "Warning! Process <"+procName+"> uses "+prop+"% ("+procMem+"Mb) of total memory.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                    //Toast.makeText(context, "Warning! Process <"+programe.getProcessName()+"> uses "+formatter.format(proportion*100)+"% ("+processMemoryMb+"Mb) of total memory.", Toast.LENGTH_SHORT).show();
                 }
+
+//                CpuInfo cpuInfo = new CpuInfo(PowerManagerApp.mainActivity.getBaseContext(), pid, Integer.toString(uid));
+//                cpuInfo.readCpuStat();
+//
+//                String processCpuRatio = "0.00";
+//                String totalCpuRatio = "0.00";
+//                String trafficSize = "0";
+
+//                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+//                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+//                totalBatt = String.valueOf(level * 100 / scale);
+//                voltage = String.valueOf(intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) * 1.0 / 1000);
+//                temperature = String.valueOf(intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) * 1.0 / 10);
+//                CurrentInfo currentInfo = new CurrentInfo();
+//                String currentBatt = String.valueOf(currentInfo.getCurrentValue());
+
+//                ArrayList<String> cpuRatioInfo = cpuInfo.getCpuRatioInfo("", "", "", "");
+//                if (!cpuRatioInfo.isEmpty())
+//                {
+//                    //Log.d(">>>","size: "+cpuRatioInfo.size());
+//                    processCpuRatio = cpuRatioInfo.get(0);
+//                    totalCpuRatio = cpuRatioInfo.get(1);
+//                    trafficSize = cpuRatioInfo.get(2);
+//                    Log.d(">>>PROCESS","processCpuRatio: "+processCpuRatio+"   totalCpuRatio: "+totalCpuRatio+"   trafficSize: "+trafficSize);
+//                }
+
+
 
             }
         }
