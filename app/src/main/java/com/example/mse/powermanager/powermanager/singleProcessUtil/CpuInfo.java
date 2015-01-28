@@ -1,24 +1,7 @@
-/*
- * Copyright (c) 2012-2013 NetEase, Inc. and other contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 package com.example.mse.powermanager.powermanager.singleProcessUtil;
 
 import android.content.Context;
 import android.util.Log;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -50,7 +33,6 @@ public class CpuInfo {
 	private String processCpuRatio = "";
 	private ArrayList<String> totalCpuRatio = new ArrayList<String>();
 	private int pid;
-
 	private static final String CPU_DIR_PATH = "/sys/devices/system/cpu/";
 	private static final String CPU_STAT = "/proc/stat";
 	private static final String COMMA = ",";
@@ -64,16 +46,10 @@ public class CpuInfo {
 		cpuUsedRatio = new ArrayList<String>();
 	}
 
-	/**
-	 * read the status of CPU.
-	 * 
-	 * @throws java.io.FileNotFoundException
-	 */
 	public void readCpuStat() {
 		String processPid = Integer.toString(pid);
 		String cpuStatPath = "/proc/" + processPid + "/stat";
 		try {
-			// monitor cpu stat of certain process
 			RandomAccessFile processCpuInfo = new RandomAccessFile(cpuStatPath, "r");
 			String line = "";
 			StringBuffer stringBuffer = new StringBuffer();
@@ -93,12 +69,8 @@ public class CpuInfo {
 		readTotalCpuStat();
 	}
 
-	/**
-	 * read stat of each CPU cores
-	 */
 	private void readTotalCpuStat() {
 		try {
-			// monitor total and idle cpu stat of certain process
 			RandomAccessFile cpuInfo = new RandomAccessFile(CPU_STAT, "r");
 			String line = "";
 			while ((null != (line = cpuInfo.readLine())) && line.startsWith("cpu")) {
@@ -115,10 +87,6 @@ public class CpuInfo {
 		}
 	}
 
-	/**
-	 * display directories naming with "cpu*"
-	 *
-	 */
 	class CpuFilter implements FileFilter {
 		@Override
 		public boolean accept(File pathname) {
@@ -130,11 +98,7 @@ public class CpuInfo {
 		}
 	}
 
-	/**
-	 * get CPU core numbers
-	 * 
-	 * @return cpu core numbers
-	 */
+
 	public int getCpuNum() {
 		try {
 			// Get directory containing CPU info
@@ -148,19 +112,12 @@ public class CpuInfo {
 		}
 	}
 
-	/**
-	 * reserve used ratio of process CPU and total CPU, meanwhile collect
-	 * network traffic.
-	 * 
-	 * @return network traffic ,used ratio of process CPU and total CPU in
-	 *         certain interval
-	 */
-	public ArrayList<String> getCpuRatioInfo(String totalBatt, String currentBatt, String temperature, String voltage) {
+	public ArrayList<String> getCpuRatioInfo() {
 
-		DecimalFormat fomart = new DecimalFormat();
-		fomart.setGroupingUsed(false);
-		fomart.setMaximumFractionDigits(2);
-		fomart.setMinimumFractionDigits(2);
+		DecimalFormat format = new DecimalFormat();
+		format.setGroupingUsed(false);
+		format.setMaximumFractionDigits(2);
+		format.setMinimumFractionDigits(2);
 
 		cpuUsedRatio.clear();
 		idleCpu.clear();
@@ -179,11 +136,11 @@ public class CpuInfo {
                 traffic = (lastestTraffic - initialTraffic + 1023) / 1024;
             StringBuffer totalCpuBuffer = new StringBuffer();
             if (null != totalCpu2 && totalCpu2.size() > 0) {
-                processCpuRatio = fomart.format(100 * ((double) (processCpu - processCpu2) / ((double) (totalCpu.get(0) - totalCpu2.get(0)))));
+                processCpuRatio = format.format(100 * ((double) (processCpu - processCpu2) / ((double) (totalCpu.get(0) - totalCpu2.get(0)))));
                 for (int i = 0; i < (totalCpu.size() > totalCpu2.size() ? totalCpu2.size() : totalCpu.size()); i++) {
                     String cpuRatio = "0.00";
                     if (totalCpu.get(i) - totalCpu2.get(i) > 0) {
-                        cpuRatio = fomart
+                        cpuRatio = format
                                 .format(100 * ((double) ((totalCpu.get(i) - idleCpu.get(i)) - (totalCpu2.get(i) - idleCpu2.get(i))) / (double) (totalCpu
                                         .get(i) - totalCpu2.get(i))));
                     }
@@ -213,12 +170,7 @@ public class CpuInfo {
         return cpuUsedRatio;
 	}
 
-	/**
-	 * is text a positive number
-	 * 
-	 * @param text
-	 * @return
-	 */
+
 	private boolean isPositive(String text) {
 		Double num;
 		try {

@@ -17,10 +17,6 @@ public abstract class NetworkMeasurement implements Measurement {
         this.interface_name = interface_name;
     }
 
-    public String getName() {
-        return interface_name;
-    }
-
     public static LinkedList<String> getInterfaceNames() {
         try {
             LinkedList<String> interfaceNames = new LinkedList<String>();

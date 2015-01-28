@@ -15,11 +15,6 @@ public class MemoryInfo {
 	private static final String LOG_TAG = "PowerManager-"
 			+ MemoryInfo.class.getSimpleName();
 
-	/**
-	 * get total memory of certain device.
-	 * 
-	 * @return total memory of device
-	 */
 	public long getTotalMemory() {
 		String memInfoPath = "/proc/meminfo";
 		String readTemp = "";
@@ -45,12 +40,6 @@ public class MemoryInfo {
 		return memory;
 	}
 
-	/**
-	 * get free memory.
-	 * 
-	 * @return free memory of device
-	 * 
-	 */
 	public long getFreeMemorySize(Context context) {
 		ActivityManager.MemoryInfo outInfo = new ActivityManager.MemoryInfo();
 		ActivityManager am = (ActivityManager) context
@@ -60,15 +49,7 @@ public class MemoryInfo {
 		return avaliMem / 1024;
 	}
 
-	/**
-	 * get the memory of process with certain pid.
-	 * 
-	 * @param pid
-	 *            pid of process
-	 * @param context
-	 *            context of certain activity
-	 * @return memory usage of certain process
-	 */
+
 	public int getPidMemorySize(int pid, Context context) {
 		ActivityManager am = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);

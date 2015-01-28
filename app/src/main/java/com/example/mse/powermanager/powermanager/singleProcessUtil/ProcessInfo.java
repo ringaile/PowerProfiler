@@ -1,4 +1,3 @@
-
 package com.example.mse.powermanager.powermanager.singleProcessUtil;
 
 import android.app.ActivityManager;
@@ -15,14 +14,6 @@ public class ProcessInfo {
 
 	private static final String PACKAGE_NAME = "com.example.mse.powermanager.powermanager";
 
-	/**
-	 * get information of all running processes,including package name ,process
-	 * name ,icon ,pid and uid.
-	 * 
-	 * @param context
-	 *            context of activity
-	 * @return running processes list
-	 */
 	public List<Programe> getRunningProcess(Context context) {
 
 		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -51,13 +42,6 @@ public class ProcessInfo {
 		return progressList;
 	}
 
-	/**
-	 * get information of all applications.
-	 * 
-	 * @param context
-	 *            context of activity
-	 * @return packages information of all applications
-	 */
 	private List<ApplicationInfo> getPackagesInfo(Context context) {
 		PackageManager pm = context.getApplicationContext().getPackageManager();
 		List<ApplicationInfo> appList = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);

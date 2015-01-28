@@ -2,7 +2,6 @@ package com.example.mse.powermanager.powermanager.singleProcessUtil;
 
 import android.os.Build;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -21,11 +20,7 @@ public class CurrentInfo {
 	private static final String BATT_CURRENT_ADC = "/sys/class/power_supply/battery/batt_current_adc";
 	private static final String CURRENT_AVG = "/sys/class/power_supply/battery/current_avg";
 
-	/**
-	 * read system file to get current value
-	 * 
-	 * @return current value
-	 */
+
 	public Long getCurrentValue() {
 		File f = null;
 		Log.d(LOG_TAG, BUILD_MODEL);
@@ -87,11 +82,6 @@ public class CurrentInfo {
 		return null;
 	}
 
-	/**
-	 * get current value from smem_text
-	 * 
-	 * @return current value
-	 */
 	public Long getSMemValue() {
 		boolean success = false;
 		String text = null;
@@ -124,13 +114,6 @@ public class CurrentInfo {
 		return value;
 	}
 
-	/**
-	 * read system file to get current value
-	 * 
-	 * @param file
-	 * @param convertToMillis 
-	 * @return current value
-	 */
 	public Long getCurrentValue(File file, boolean convertToMillis) {
 		Log.d(LOG_TAG, "*** getCurrentValue ***");
 		Log.d(LOG_TAG, "*** " + convertToMillis + " ***");

@@ -1,4 +1,3 @@
-
 package com.example.mse.powermanager.powermanager.singleProcessUtil;
 
 import android.graphics.drawable.Drawable;

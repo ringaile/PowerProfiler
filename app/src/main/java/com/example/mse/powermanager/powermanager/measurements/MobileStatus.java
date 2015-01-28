@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-/**
- * Created by Ringaile on 10/11/2014.
- */
 public class MobileStatus implements Measurement {
 
     private ConnectivityManager connectivity;

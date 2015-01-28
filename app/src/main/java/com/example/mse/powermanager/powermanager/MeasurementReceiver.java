@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
-
 import com.example.mse.powermanager.powermanager.measurements.BatteryMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.CpuUsageMeasurement;
 import com.example.mse.powermanager.powermanager.measurements.GpsStatus;
@@ -38,10 +37,8 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent)   {
         this.context = context;
-        String fileid = intent.getExtras().getString("fileid");
 
         pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
 
@@ -74,23 +71,9 @@ public class MeasurementReceiver extends BroadcastReceiver{
     {
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
-
-        //boolean wifiEnabled = wifiManager.isWifiEnabled();
-        //Log.d("wifi enabled >", String.valueOf(wifiEnabled));
-
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.disable();
-
-        //boolean bluetoothEnabled = mBluetoothAdapter.isEnabled();
-        //Log.d("bluetooth enabled >", String.valueOf(bluetoothEnabled));
-
         PowerManagerApp.mainActivity.setScreenBrightness(0.1f);
-
-
-//        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//        WindowManager.LayoutParams lp = PowerManagerApp.mainActivity.getWindow().getAttributes();
-//        lp.screenBrightness =0.2f;// 100 / 100.0f;
-//        PowerManagerApp.mainActivity.getWindow().setAttributes(lp);
     }
 
     private void turnOn()
@@ -102,13 +85,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
         mBluetoothAdapter.enable();
     }
 
-    private void showNotification(double proc, double mem)
-    {
-
-    }
-
-    private void iteration()
-    {
+    private void iteration() {
 
         Log.d("iteration", String.valueOf(PowerManagerApp.measurementIterations.size()));
         MeasurementStruct measurement = perforMeasurementIteration();
@@ -154,7 +131,6 @@ public class MeasurementReceiver extends BroadcastReceiver{
                     Log.d(">>> ACTION", "saving action");
                     final double proc = meanProcessorLoad;
                     final double mem = meanMemoryFree;
-                    //showNotification(proc,mem);
                     PowerManagerApp.warningsList.add("Warning!\nProcessor load: "+String.format("%.2f",proc)+"%\nMemory free: "+String.format("%.2f",mem)+"%");
 
                     turnOff();
@@ -235,10 +211,8 @@ public class MeasurementReceiver extends BroadcastReceiver{
         //TODO: check this, we need only one value, not many
         for (String interface_name : ReceiveMeasurement.getInterfaceNames())
         {
-            //Log.d(">>> interface name:", interface_name);
             if (interface_name.equals("wlan0"))
             {
-                //Log.d("wlan0","yep");
                 measurement.networkReceived = (new ReceiveMeasurement(interface_name)).getReceivedNetworkValue();
                 measurement.networkSent = (new TransmitMeasurement(interface_name)).getSentNetworkValue();
                 break;
@@ -254,8 +228,6 @@ public class MeasurementReceiver extends BroadcastReceiver{
         List<Programe> processList = processInfo.getRunningProcess(PowerManagerApp.mainActivity.getBaseContext());
         for (Programe programe : processList)
         {
-            //if (programe.getPackageName() != null)
-            {
                 int pid = programe.getPid();
                 int uid = programe.getUid();
                 Log.d(">>>PROCESS","name: "+programe.getProcessName()+"   pid: "+String.valueOf(pid)+"   uid: "+String.valueOf(uid));
@@ -277,9 +249,6 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 if (proportion > 0.01) {
                     PowerManagerApp.warningsList.add("Warning! Process <" + programe.getProcessName() + "> uses " + formatter.format(proportion * 100) + "% (" + processMemoryMb + "Mb) of total memory.");
                 }
-
-
-            }
         }
     }
 

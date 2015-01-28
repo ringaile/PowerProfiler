@@ -132,7 +132,7 @@ public class SingleProcessService extends Service {
         } catch (Exception e) {
             currentBatt = "N/A";
         }
-        ArrayList<String> processInfo = cpuInfo.getCpuRatioInfo(totalBatt, currentBatt, temperature, voltage);
+        ArrayList<String> processInfo = cpuInfo.getCpuRatioInfo();
         if (isFloating) {
             String processCpuRatio = "0.00";
             String totalCpuRatio = "0.00";

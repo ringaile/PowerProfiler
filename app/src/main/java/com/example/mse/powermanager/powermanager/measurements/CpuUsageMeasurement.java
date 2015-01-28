@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Created by Ringaile on 10/11/2014.
- */
 public class CpuUsageMeasurement implements Measurement {
 
 
@@ -47,8 +44,7 @@ public class CpuUsageMeasurement implements Measurement {
         return null;
     }
 
-    private String[] readProcFile()
-            throws IOException {
+    private String[] readProcFile() throws IOException {
         File file = new File("/proc/stat");
         BufferedReader rd = new BufferedReader(new FileReader(file));
         String line;

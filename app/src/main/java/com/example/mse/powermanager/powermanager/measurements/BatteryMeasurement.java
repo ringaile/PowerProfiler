@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-/**
- * Created by Ringaile on 10/11/2014.
- */
 public class BatteryMeasurement implements Measurement{
 
     private Context context;

@@ -5,9 +5,6 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.provider.Settings;
 
-/**
- * Created by Ringaile on 10/11/2014.
- */
 public class ScreenStatus implements Measurement{
 
     private PowerManager powermanager;
@@ -17,19 +14,6 @@ public class ScreenStatus implements Measurement{
         powermanager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
         contentResolver = context.getContentResolver();
     }
-
-//    public String getName() {
-//
-//        return "screen_status";
-//    }
-//
-//    public Double getMeasurement() {
-//        if (powermanager.isScreenOn()) {
-//            return 1.0;
-//        }
-//
-//        return 0.0;
-//    }
 
     public boolean getScreenStatusValue()
     {
