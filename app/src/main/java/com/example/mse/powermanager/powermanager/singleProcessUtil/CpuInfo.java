@@ -2,6 +2,9 @@ package com.example.mse.powermanager.powermanager.singleProcessUtil;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.example.mse.powermanager.powermanager.measurements.CpuUsageMeasurement;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -66,7 +69,8 @@ public class CpuInfo {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		readTotalCpuStat();
+
+       readTotalCpuStat();
 	}
 
 	private void readTotalCpuStat() {
