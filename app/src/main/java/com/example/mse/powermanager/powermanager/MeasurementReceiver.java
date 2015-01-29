@@ -71,7 +71,9 @@ public class MeasurementReceiver extends BroadcastReceiver{
     {
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         mBluetoothAdapter.disable();
         PowerManagerApp.mainActivity.setScreenBrightness(0.1f);
     }
@@ -83,6 +85,8 @@ public class MeasurementReceiver extends BroadcastReceiver{
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.enable();
+
+        PowerManagerApp.mainActivity.setScreenBrightness(0.7f);
     }
 
     private void iteration() {
@@ -178,6 +182,8 @@ public class MeasurementReceiver extends BroadcastReceiver{
             resultStr += "\n";
         }
         final String result = resultStr;
+        if (result.length() == 0)
+            return;
         Handler h = new Handler(Looper.getMainLooper());
         h.post(new Runnable()
         {
@@ -246,9 +252,27 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 Log.d(">>>PROCESS","MB -> process memory: "+processMemoryMb+"   free memory: "+freeMemoryMb+"   total memory: "+totalMemoryMb);
                 double proportion = (double)pidMemory/(double)totalMemory;
                 Log.d(">>>PROCESS","MB mem porportion: "+formatter.format(proportion));
-                if (proportion > 0.01) {
-                    PowerManagerApp.warningsList.add("Warning! Process <" + programe.getProcessName() + "> uses " + formatter.format(proportion * 100) + "% (" + processMemoryMb + "Mb) of total memory.");
+
+            boolean tooHeavy = false;
+            if (PowerManagerApp.mode == 0)
+            {
+                if (proportion > 0.01)
+                {
+                    tooHeavy = true;
                 }
+            }
+            else if (PowerManagerApp.mode == 1)
+            {
+                if (proportion > 0.05)
+                {
+                    tooHeavy = true;
+                }
+            }
+
+            if (tooHeavy == true)
+            {
+                PowerManagerApp.warningsList.add("Warning! Process <" + programe.getProcessName() + "> uses " + formatter.format(proportion * 100) + "% (" + processMemoryMb + "Mb) of total memory.");
+            }
         }
     }
 
