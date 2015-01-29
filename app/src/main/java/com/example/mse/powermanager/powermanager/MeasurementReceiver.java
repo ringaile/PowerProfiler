@@ -274,6 +274,7 @@ public class MeasurementReceiver extends BroadcastReceiver{
                 PowerManagerApp.warningsList.add("Warning! Process <" + programe.getProcessName() + "> uses " + formatter.format(proportion * 100) + "% (" + processMemoryMb + "Mb) of total memory.");
             }
         }
+        //comment
     }
 
 
